@@ -1,22 +1,18 @@
 <!--
  * @Description: 登录组件
- * @Author: hai-27
- * @Date: 2020-02-19 20:55:17
- * @LastEditors: hai-27
- * @LastEditTime: 2020-03-01 15:34:08
  -->
 <template>
   <div id="myLogin">
     <el-dialog title="登录" width="300px" center :visible.sync="isLogin">
       <el-form :model="LoginUser" :rules="rules" status-icon ref="ruleForm" class="demo-ruleForm">
         <el-form-item prop="name">
-          <el-input prefix-icon="el-icon-user-solid" placeholder="请输入账号" v-model="LoginUser.name"></el-input>
+          <el-input prefix-icon="el-icon-user-solid" placeholder="Please enter your user name" v-model="LoginUser.name"></el-input>
         </el-form-item>
         <el-form-item prop="pass">
           <el-input
             prefix-icon="el-icon-view"
             type="password"
-            placeholder="请输入密码"
+            placeholder="Please enter your password"
             v-model="LoginUser.pass"
           ></el-input>
         </el-form-item>
@@ -36,7 +32,7 @@ export default {
     // 用户名的校验方法
     let validateName = (rule, value, callback) => {
       if (!value) {
-        return callback(new Error("请输入用户名"));
+        return callback(new Error("Please enter a user name"));
       }
       // 用户名以字母开头,长度在5-16之间,允许字母数字下划线
       const userNameRule = /^[a-zA-Z][a-zA-Z0-9_]{4,15}$/;
@@ -44,13 +40,13 @@ export default {
         this.$refs.ruleForm.validateField("checkPass");
         return callback();
       } else {
-        return callback(new Error("字母开头,长度5-16之间,允许字母数字下划线"));
+        return callback(new Error("The password must start with a letter and contain 5 to 16 characters."));
       }
     };
     // 密码的校验方法
     let validatePass = (rule, value, callback) => {
       if (value === "") {
-        return callback(new Error("请输入密码"));
+        return callback(new Error("Please enter your password"));
       }
       // 密码以字母开头,长度在6-18之间,允许字母数字和下划线
       const passwordRule = /^[a-zA-Z]\w{5,17}$/;
@@ -59,7 +55,7 @@ export default {
         return callback();
       } else {
         return callback(
-          new Error("字母开头,长度6-18之间,允许字母数字和下划线")
+          new Error("The password must start with a letter and contain 5 to 16 characters.")
         );
       }
     };

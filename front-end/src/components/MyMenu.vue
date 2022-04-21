@@ -1,9 +1,5 @@
 <!--
  * @Description: 菜单组件，用于首页商品展示模块的右上角菜单
- * @Author: hai-27
- * @Date: 2020-02-07 16:23:00
- * @LastEditors: hai-27
- * @LastEditTime: 2020-02-26 22:52:35
  -->
 <template>
   <div class="myMenu" id="myMenu">
@@ -51,12 +47,12 @@ export default {
 }
 
 #myMenu a:hover {
-  color: #ff6700;
-  border-bottom: 2px solid #ff6700;
+  color: #ec9d8f;
+  border-bottom: 2px solid #ec9d8f;
 }
 
 #myMenu .active a {
-  color: #ff6700;
-  border-bottom: 2px solid #ff6700;
+  color: #ec9d8f;
+  border-bottom: 2px solid #ec9d8f;
 }
 </style>

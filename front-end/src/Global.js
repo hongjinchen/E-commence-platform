@@ -11,7 +11,7 @@ exports.install = function (Vue) {
   // 封装提示成功的弹出框
   Vue.prototype.notifySucceed = function (msg) {
     this.$notify({
-      title: "成功",
+      title: "Success",
       message: msg,
       type: "success",
       offset: 100
@@ -20,7 +20,7 @@ exports.install = function (Vue) {
   // 封装提示失败的弹出框
   Vue.prototype.notifyError = function (msg) {
     this.$notify.error({
-      title: "错误",
+      title: "Error",
       message: msg,
       offset: 100
     });

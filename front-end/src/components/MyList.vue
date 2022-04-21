@@ -1,18 +1,14 @@
 <!--
  * @Description: 列表组件，用于首页、全部商品页面的商品列表
- * @Author: hai-27
- * @Date: 2020-02-07 16:23:00
- * @LastEditors: hai-27
- * @LastEditTime: 2020-04-05 13:22:22
  -->
 <template>
   <div id="myList" class="myList">
     <ul>
       <li v-for="item in list" :key="item.product_id">
         <el-popover placement="top">
-          <p>确定删除吗？</p>
+          <p>Are you sure?</p>
           <div style="text-align: right; margin: 10px 0 0">
-            <el-button type="primary" size="mini" @click="deleteCollect(item.product_id)">确定</el-button>
+            <el-button type="primary" size="mini" @click="deleteCollect(item.product_id)">Continue</el-button>
           </div>
           <i class="el-icon-close delete" slot="reference" v-show="isDelete"></i>
         </el-popover>
@@ -21,17 +17,17 @@
           <h2>{{item.product_name}}</h2>
           <h3>{{item.product_title}}</h3>
           <p>
-            <span>{{item.product_selling_price}}元</span>
+            <span>{{item.product_selling_price}}RMB</span>
             <span
               v-show="item.product_price != item.product_selling_price"
               class="del"
-            >{{item.product_price}}元</span>
+            >{{item.product_price}}RMB</span>
           </p>
         </router-link>
       </li>
       <li v-show="isMore && list.length>=1" id="more">
         <router-link :to="{ path: '/goods', query: {categoryID:categoryID} }">
-          浏览更多
+          Browse more...
           <i class="el-icon-d-arrow-right"></i>
         </router-link>
       </li>
@@ -146,7 +142,7 @@ export default {
 .myList ul li p {
   margin: 10px 10px 10px;
   text-align: center;
-  color: #ff6700;
+  color: #ec9d8f;
 }
 .myList ul li p .del {
   margin-left: 0.5em;
@@ -162,7 +158,7 @@ export default {
   color: #333;
 }
 .myList #more a:hover {
-  color: #ff6700;
+  color: #ec9d8f;
 }
 .myList ul li .delete {
   position: absolute;
@@ -174,6 +170,6 @@ export default {
   display: block
 }
 .myList ul li .delete:hover {
-  color: #ff6700;
+  color: #ec9d8f;
 }
 </style>

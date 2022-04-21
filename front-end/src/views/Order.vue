@@ -11,8 +11,8 @@
     <div class="order-header">
       <div class="order-header-content">
         <p>
-          <i class="el-icon-s-order" style="font-size: 30px;color: #ff6700;"></i>
-          我的订单
+          <i class="el-icon-s-order" style="font-size: 30px;color: #ec9d8f;"></i>
+          My order
         </p>
       </div>
     </div>
@@ -24,15 +24,15 @@
         <ul>
           <!-- 我的订单表头 -->
           <li class="order-info">
-            <div class="order-id">订单编号: {{item[0].order_id}}</div>
-            <div class="order-time">订单时间: {{item[0].order_time | dateFormat}}</div>
+            <div class="order-id">Order No:{{item[0].order_id}}</div>
+            <div class="order-time">Order Time:{{item[0].order_time | dateFormat}}</div>
           </li>
           <li class="header">
             <div class="pro-img"></div>
-            <div class="pro-name">商品名称</div>
-            <div class="pro-price">单价</div>
-            <div class="pro-num">数量</div>
-            <div class="pro-total">小计</div>
+            <div class="pro-name">Type of plant </div>
+            <div class="pro-price">Price</div>
+            <div class="pro-num">Number</div>
+            <div class="pro-total">Subtotal</div>
           </li>
           <!-- 我的订单表头END -->
 
@@ -56,14 +56,14 @@
         <div class="order-bar">
           <div class="order-bar-left">
             <span class="order-total">
-              共
-              <span class="order-total-num">{{total[index].totalNum}}</span> 件商品
+              Total 
+              <span class="order-total-num">{{total[index].totalNum}}</span>  Item
             </span>
           </div>
           <div class="order-bar-right">
             <span>
-              <span class="total-price-title">合计：</span>
-              <span class="total-price">{{total[index].totalPrice}}元</span>
+              <span class="total-price-title">Cart subtotal: </span>
+              <span class="total-price">{{total[index].totalPrice}}RMB</span>
             </span>
           </div>
           <!-- 订单列表END -->
@@ -76,8 +76,8 @@
     <!-- 订单为空的时候显示的内容 -->
     <div v-else class="order-empty">
       <div class="empty">
-        <h2>您的订单还是空的！</h2>
-        <p>快去购物吧！</p>
+        <h2>Your order is still empty!</h2>
+        <p>Go shopping!</p>
       </div>
     </div>
     <!-- 订单为空的时候显示的内容END -->
@@ -137,7 +137,7 @@ export default {
 /* 我的订单头部CSS */
 .order .order-header {
   height: 64px;
-  border-bottom: 2px solid #ff6700;
+  border-bottom: 2px solid #ec9d8f;
   background-color: #fff;
   margin-bottom: 20px;
 }
@@ -171,11 +171,11 @@ export default {
   line-height: 60px;
   padding: 0 26px;
   color: #424242;
-  border-bottom: 1px solid #ff6700;
+  border-bottom: 1px solid #ec9d8f;
 }
 .order .content ul .order-info .order-id {
   float: left;
-  color: #ff6700;
+  color: #ec9d8f;
 }
 .order .content ul .order-info .order-time {
   float: right;
@@ -212,7 +212,7 @@ export default {
   color: #424242;
 }
 .order .content ul .pro-name a:hover {
-  color: #ff6700;
+  color: #ec9d8f;
 }
 .order .content ul .pro-price {
   float: left;
@@ -232,13 +232,13 @@ export default {
   text-align: right;
 }
 .order .content ul .pro-total-in {
-  color: #ff6700;
+  color: #ec9d8f;
 }
 
 .order .order-bar {
   width: 1185px;
   padding: 0 20px;
-  border-top: 1px solid #ff6700;
+  border-top: 1px solid #ec9d8f;
   height: 50px;
   line-height: 50px;
   background-color: #fff;
@@ -250,18 +250,19 @@ export default {
   color: #757575;
 }
 .order .order-bar .order-bar-left .order-total-num {
-  color: #ff6700;
+  color: #ec9d8f;
 }
 .order .order-bar .order-bar-right {
   float: right;
 }
 .order .order-bar .order-bar-right .total-price-title {
-  color: #ff6700;
+  color: #ec9d8f;
   font-size: 14px;
+    margin-right: 20px;
 }
 .order .order-bar .order-bar-right .total-price {
-  color: #ff6700;
-  font-size: 30px;
+  color: #ec9d8f;
+  font-size: 20px;
 }
 /* 订单列表CSS END */
 

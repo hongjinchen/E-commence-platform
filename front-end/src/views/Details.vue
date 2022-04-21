@@ -1,9 +1,5 @@
 <!--
  * @Description: 商品详情页面组件
- * @Author: hai-27
- * @Date: 2020-02-16 20:20:26
- * @LastEditors: hai-27
- * @LastEditTime: 2020-03-07 21:59:26
  -->
 <template>
   <div id="details">
@@ -14,13 +10,13 @@
         <div class="list">
           <ul>
             <li>
-              <router-link to>概述</router-link>
+              <router-link to>Description</router-link>
             </li>
             <li>
-              <router-link to>参数</router-link>
+              <router-link to>Parameter</router-link>
             </li>
             <li>
-              <router-link to>用户评价</router-link>
+              <router-link to>User comments</router-link>
             </li>
           </ul>
         </div>
@@ -51,44 +47,40 @@
       <div class="content">
         <h1 class="name">{{productDetails.product_name}}</h1>
         <p class="intro">{{productDetails.product_intro}}</p>
-        <p class="store">小米自营</p>
         <div class="price">
-          <span>{{productDetails.product_selling_price}}元</span>
+          <span>{{productDetails.product_selling_price}}RMB</span>
           <span
             v-show="productDetails.product_price != productDetails.product_selling_price"
             class="del"
-          >{{productDetails.product_price}}元</span>
+          >{{productDetails.product_price}}RMB</span>
         </div>
         <div class="pro-list">
           <span class="pro-name">{{productDetails.product_name}}</span>
           <span class="pro-price">
-            <span>{{productDetails.product_selling_price}}元</span>
+            <span>{{productDetails.product_selling_price}}RMB</span>
             <span
               v-show="productDetails.product_price != productDetails.product_selling_price"
               class="pro-del"
-            >{{productDetails.product_price}}元</span>
+            >{{productDetails.product_price}}RMB</span>
           </span>
-          <p class="price-sum">总计 : {{productDetails.product_selling_price}}元</p>
+          <p class="price-sum">Subtotal: {{productDetails.product_selling_price}}RMB</p>
         </div>
         <!-- 内容区底部按钮 -->
         <div class="button">
-          <el-button class="shop-cart" :disabled="dis" @click="addShoppingCart">加入购物车</el-button>
-          <el-button class="like" @click="addCollect">喜欢</el-button>
+          <el-button class="shop-cart" :disabled="dis" @click="addShoppingCart">Add to cart</el-button>
+          <el-button class="like" @click="addCollect">Wishlist</el-button>
         </div>
         <!-- 内容区底部按钮END -->
         <div class="pro-policy">
           <ul>
             <li>
-              <i class="el-icon-circle-check"></i> 小米自营
+              <i class="el-icon-circle-check"></i> Base Direct Delivery
             </li>
             <li>
-              <i class="el-icon-circle-check"></i> 小米发货
+              <i class="el-icon-circle-check"></i> After Sale Service
             </li>
             <li>
-              <i class="el-icon-circle-check"></i> 7天无理由退货
-            </li>
-            <li>
-              <i class="el-icon-circle-check"></i> 7天价格保护
+              <i class="el-icon-circle-check"></i> Online Customer Service
             </li>
           </ul>
         </div>
@@ -338,7 +330,7 @@ export default {
 }
 #details .main .content .button .shop-cart {
   width: 340px;
-  background-color: #ff6700;
+  background-color: #EB7A67;
 }
 #details .main .content .button .shop-cart:hover {
   background-color: #f25807;

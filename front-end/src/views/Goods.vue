@@ -11,9 +11,9 @@
     <div class="breadcrumb">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item to="/">Home</el-breadcrumb-item>
-        <el-breadcrumb-item>All Products</el-breadcrumb-item>
+        <el-breadcrumb-item>Products</el-breadcrumb-item>
         <el-breadcrumb-item v-if="search">Search</el-breadcrumb-item>
-        <el-breadcrumb-item v-else>Category</el-breadcrumb-item>
+        <el-breadcrumb-item v-else>List</el-breadcrumb-item>
         <el-breadcrumb-item v-if="search">{{search}}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -22,7 +22,7 @@
     <!-- 分类标签 -->
     <div class="nav">
       <div class="product-nav">
-        <div class="title">Category</div>
+        <div class="title">List</div>
         <el-tabs v-model="activeName" type="card">
           <el-tab-pane
             v-for="item in categoryList"
@@ -170,7 +170,7 @@ export default {
         .then(res => {
           const val = {
             category_id: 0,
-            category_name: "全部"
+            category_name: "All"
           };
           const cate = res.data.category;
           cate.unshift(val);

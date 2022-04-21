@@ -10,7 +10,7 @@
     <!-- Add a static page for my favorite module -->
     <div class="collect-header">
       <div class="collect-title">
-        <i class="el-icon-collection-tag" style="color: #ff6700;"></i>
+        <i class="el-icon-collection-tag" style="color: #ec9d8f;"></i>
         My wishlist
       </div>
     </div>
@@ -61,7 +61,7 @@ export default {
 .collect .collect-header {
   height: 64px;
   background-color: #fff;
-  border-bottom: 2px solid #ff6700;
+  border-bottom: 2px solid #ec9d8f;
 }
 .collect .collect-header .collect-title {
   width: 1225px;

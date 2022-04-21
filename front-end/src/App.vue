@@ -15,17 +15,25 @@
             <li v-if="!this.$store.getters.getUser">
               <el-button type="text" @click="login">Login</el-button>
               <span class="sep">|</span>
-              <el-button type="text" @click="register = true">Register</el-button>
+              <el-button type="text" @click="register = true"
+                >Register</el-button
+              >
             </li>
             <li v-else>
               Welcome
               <el-popover placement="top" width="180" v-model="visible">
                 <p>Are you sure to log out?</p>
                 <div style="text-align: right; margin: 10px 0 0">
-                  <el-button size="mini" type="text" @click="visible = false">Cancel</el-button>
-                  <el-button type="primary" size="mini" @click="logout">Continue</el-button>
+                  <el-button size="mini" type="text" @click="visible = false"
+                    >Cancel</el-button
+                  >
+                  <el-button type="primary" size="mini" @click="logout"
+                    >Continue</el-button
+                  >
                 </div>
-                <el-button type="text" slot="reference">{{this.$store.getters.getUser.userName}}</el-button>
+                <el-button type="text" slot="reference">{{
+                  this.$store.getters.getUser.userName
+                }}</el-button>
               </el-popover>
             </li>
             <li>
@@ -36,8 +44,9 @@
             </li>
             <li :class="getNum > 0 ? 'shopCart-full' : 'shopCart'">
               <router-link to="/shoppingCart">
-                <i class="el-icon-shopping-cart-full"></i> Flower Basket
-                <span class="num">({{getNum}})</span>
+                <i class="el-icon-shopping-cart-full" style="color:#fff"></i>
+                Flower Basket
+                <span class="num">({{ getNum }})</span>
               </router-link>
             </li>
           </ul>
@@ -51,21 +60,36 @@
           :default-active="activeIndex"
           class="el-menu-demo"
           mode="horizontal"
-          active-text-color="#409eff"
+          active-text-color="#ec9d8f"
           router
         >
           <div class="logo">
             <router-link to="/">
-              <img style="margin-left:40px; width: -webkit-fill-available;height: -webkit-fill-available;" src="./assets/imgs/logo.png" alt />
+              <img
+                style="margin-left:15px; width: -webkit-fill-available;height: -webkit-fill-available;"
+                src="./assets/imgs/logo.png"
+                alt
+              />
             </router-link>
           </div>
-          <el-menu-item index="/">Home</el-menu-item>
-          <el-menu-item index="/goods">All Products</el-menu-item>
-          <el-menu-item index="/about">About Us</el-menu-item>
+          <el-menu-item style="font-size:18px" index="/">Home</el-menu-item>
+          <el-menu-item style="font-size:18px" index="/goods"
+            >Products</el-menu-item
+          >
+          <el-menu-item style="font-size:18px" index="/about"
+            >About Us</el-menu-item
+          >
 
           <div class="so">
-            <el-input placeholder="请输入搜索内容" v-model="search">
-              <el-button slot="append" icon="el-icon-search" @click="searchClick"></el-button>
+            <el-input
+              placeholder="Please enter your search content.."
+              v-model="search"
+            >
+              <el-button
+                slot="append"
+                icon="el-icon-search"
+                @click="searchClick"
+              ></el-button>
             </el-input>
           </div>
         </el-menu>
@@ -86,33 +110,93 @@
       <!-- 主要区域容器END -->
 
       <!-- 底栏容器 -->
-      <el-footer>
-        <div class="footer">
-          <div class="ng-promise-box">
-            <div class="ng-promise">
-              <p class="text">
-                <a class="icon1" href="javascript:;">7天无理由退换货</a>
-                <a class="icon2" href="javascript:;">满99元全场免邮</a>
-                <a class="icon3" style="margin-right: 0" href="javascript:;">100%品质保证</a>
-              </p>
-            </div>
-          </div>
-          <div class="github">
-            <a href="https://github.com/hai-27/vue-store" target="_blank">
-              <div class="github-but"></div>
-            </a>
-          </div>
-          <div class="mod_help">
-            <p>
-              <router-link to="/">Home</router-link>
-              <span>|</span>
-              <router-link to="/goods">All Products</router-link>
-              <span>|</span>
-              <router-link to="/about">About Us</router-link>
-            </p>
-          </div>
+      <!-- Site footer -->
+      <footer class="site-footer">
+        <div style="margin-left:200px">
+          <el-row :gutter="20">
+            <!-- <el-col :span="6"
+              ><div class="grid-content bg-purple"></div
+            ></el-col> -->
+            <el-col :span="12">
+              <div>
+                <h6>About</h6>
+                <p class="text">
+                  Put the busy down, bring flowers home.<br />
+                  We aims to break down the information barrier between flower
+                  bases and customers, creating a B2C platform that can unite
+                  multiple bases to bring the best value for money products to
+                  the platform users, including untreated fresh cut flowers and
+                  finished bouquets.
+                </p>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <h6>Categories</h6>
+                <ul class="footer-links">
+                  <li>
+                    <router-link :to="{ path: '/goods' }">
+                      All products
+                    </router-link>
+                  </li>
+                </ul>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <h6>Quick Links</h6>
+                <ul  class="footer-links">
+                  <router-link :to="{ path: '/about' }">
+                    About Us
+                  </router-link>
+                </ul>
+              </div>
+            </el-col>
+            <!-- <el-col :span="6"
+              ><div class="grid-content bg-purple"></div
+            ></el-col> -->
+          </el-row>
+          <hr />
         </div>
-      </el-footer>
+        <el-divider></el-divider>
+        <div style="margin-left:200px">
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <div>
+                <p class="text">
+                  Copyright &copy; 2022 All Rights Reserved by CAN302 Group 35.
+                </p>
+              </div>
+            </el-col>
+            <el-col :span="12">
+              <div style="padding-right:40px">
+                <ul class="social-icons">
+                  <li>
+                    <a class="facebook" href="#"
+                      ><i class="fa fa-facebook"></i
+                    ></a>
+                  </li>
+                  <li>
+                    <a class="twitter" href="#"
+                      ><i class="fa fa-twitter"></i
+                    ></a>
+                  </li>
+                  <li>
+                    <a class="dribbble" href="#"
+                      ><i class="fa fa-dribbble"></i
+                    ></a>
+                  </li>
+                  <li>
+                    <a class="linkedin" href="#"
+                      ><i class="fa fa-linkedin"></i
+                    ></a>
+                  </li>
+                </ul>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+      </footer>
       <!-- 底栏容器END -->
     </el-container>
   </div>
@@ -131,7 +215,7 @@ export default {
       activeIndex: "", // 头部导航栏选中的标签
       search: "", // 搜索条件
       register: false, // 是否显示注册组件
-      visible: false // 是否退出登录
+      visible: false, // 是否退出登录
     };
   },
   created() {
@@ -154,7 +238,7 @@ export default {
     }, 1000 * 60); */
   },
   computed: {
-    ...mapGetters(["getUser", "getNum"])
+    ...mapGetters(["getUser", "getNum"]),
   },
   watch: {
     // 获取vuex的登录状态
@@ -166,9 +250,9 @@ export default {
         // 用户已经登录,获取该用户的购物车信息
         this.$axios
           .post("/api/user/shoppingCart/getShoppingCart", {
-            user_id: val.user_id
+            user_id: val.user_id,
           })
-          .then(res => {
+          .then((res) => {
             if (res.data.code === "001") {
               // 001 为成功, 更新vuex购物车状态
               this.setShoppingCart(res.data.shoppingCartData);
@@ -177,11 +261,11 @@ export default {
               this.notifyError(res.data.msg);
             }
           })
-          .catch(err => {
+          .catch((err) => {
             return Promise.reject(err);
           });
       }
-    }
+    },
   },
   methods: {
     ...mapActions(["setUser", "setShowLogin", "setShoppingCart"]),
@@ -209,8 +293,8 @@ export default {
         this.$router.push({ path: "/goods", query: { search: this.search } });
         this.search = "";
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -285,11 +369,11 @@ a:hover {
   background: #fff;
 }
 .topbar .nav .shopCart:hover a {
-  color: #ff6700;
+  color: #ec9d8f;
 }
 .topbar .nav .shopCart-full {
   width: 120px;
-  background: #ff6700;
+  background: #ec9d8f;
 }
 .topbar .nav .shopCart-full a {
   color: white;
@@ -316,60 +400,146 @@ a:hover {
 /* 顶栏容器CSS END */
 
 /* 底栏容器CSS */
-.footer {
-  width: 100%;
-  text-align: center;
-  background: #2f2f2f;
-  padding-bottom: 20px;
+.site-footer {
+  background-color: #ec9d8f;
+  padding: 45px 0 20px;
+  font-size: 15px;
+  line-height: 24px;
+  color: #737373;
 }
-.footer .ng-promise-box {
-  border-bottom: 1px solid #3d3d3d;
-  line-height: 145px;
+.site-footer hr {
+  border-top-color: #bbb;
+  opacity: 0.5;
 }
-.footer .ng-promise-box {
-  margin: 0 auto;
-  border-bottom: 1px solid #3d3d3d;
-  line-height: 145px;
+.site-footer hr.small {
+  margin: 20px 0;
 }
-.footer .ng-promise-box .ng-promise p a {
+.site-footer h6 {
   color: #fff;
-  font-size: 20px;
-  margin-right: 210px;
-  padding-left: 44px;
-  height: 40px;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin-top: 5px;
+  letter-spacing: 2px;
+}
+.site-footer a {
+  color: #737373;
+}
+.site-footer a:hover {
+  color: #3366cc;
+  text-decoration: none;
+}
+.footer-links {
+  padding-left: 0;
+  list-style: none;
+}
+.footer-links li {
+  display: block;
+}
+.footer-links a {
+  color: #fff;
+}
+.footer-links a:active,
+.footer-links a:focus,
+.footer-links a:hover {
+  color: #3366cc;
+  text-decoration: none;
+}
+.footer-links.inline li {
   display: inline-block;
+}
+.site-footer .social-icons {
+  text-align: right;
+}
+.site-footer .social-icons a {
+  width: 40px;
+  height: 40px;
   line-height: 40px;
-  text-decoration: none;
-  background: url("./assets/imgs/us-icon.png") no-repeat left 0;
+  margin-left: 6px;
+  margin-right: 0;
+  border-radius: 100%;
+  background-color: #33353d;
 }
-.footer .github {
-  height: 50px;
-  line-height: 50px;
-  margin-top: 20px;
+.copyright-text {
+  margin: 0;
 }
-.footer .github .github-but {
-  width: 50px;
-  height: 50px;
-  margin: 0 auto;
-  background: url("./assets/imgs/github.png") no-repeat;
+@media (max-width: 991px) {
+  .site-footer [class^="col-"] {
+    margin-bottom: 30px;
+  }
 }
-.footer .mod_help {
+@media (max-width: 767px) {
+  .site-footer {
+    padding-bottom: 0;
+  }
+  .site-footer .copyright-text,
+  .site-footer .social-icons {
+    text-align: center;
+  }
+}
+.social-icons {
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+.social-icons li {
+  display: inline-block;
+  margin-bottom: 4px;
+}
+.social-icons li.title {
+  margin-right: 15px;
+  text-transform: uppercase;
+  color: #96a2b2;
+  font-weight: 700;
+  font-size: 13px;
+}
+.social-icons a {
+  background-color: #eceeef;
+  color: #818a91;
+  font-size: 16px;
+  display: inline-block;
+  line-height: 44px;
+  width: 44px;
+  height: 44px;
   text-align: center;
-  color: #888888;
+  margin-right: 8px;
+  border-radius: 100%;
+  -webkit-transition: all 0.2s linear;
+  -o-transition: all 0.2s linear;
+  transition: all 0.2s linear;
 }
-.footer .mod_help p {
-  margin: 20px 0 16px 0;
-}
-
-.footer .mod_help p a {
-  color: #888888;
-  text-decoration: none;
-}
-.footer .mod_help p a:hover {
+.social-icons a:active,
+.social-icons a:focus,
+.social-icons a:hover {
   color: #fff;
+  background-color: #29aafe;
 }
-.footer .mod_help p span {
-  padding: 0 22px;
+.social-icons.size-sm a {
+  line-height: 34px;
+  height: 34px;
+  width: 34px;
+  font-size: 14px;
+}
+.social-icons a.facebook:hover {
+  background-color: #3b5998;
+}
+.social-icons a.twitter:hover {
+  background-color: #00aced;
+}
+.social-icons a.linkedin:hover {
+  background-color: #007bb6;
+}
+.social-icons a.dribbble:hover {
+  background-color: #ea4c89;
+}
+@media (max-width: 767px) {
+  .social-icons li.title {
+    display: block;
+    margin-right: 0;
+    font-weight: 600;
+  }
+}
+.text {
+  color: #fff;
 }
 /* 底栏容器CSS END */
 </style>
