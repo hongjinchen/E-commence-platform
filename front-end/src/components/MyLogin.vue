@@ -3,7 +3,7 @@
  -->
 <template>
   <div id="myLogin">
-    <el-dialog title="登录" width="300px" center :visible.sync="isLogin">
+    <el-dialog title="Login" width="300px" center :visible.sync="isLogin">
       <el-form :model="LoginUser" :rules="rules" status-icon ref="ruleForm" class="demo-ruleForm">
         <el-form-item prop="name">
           <el-input prefix-icon="el-icon-user-solid" placeholder="Please enter your user name" v-model="LoginUser.name"></el-input>
@@ -17,7 +17,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button size="medium" type="primary" @click="Login" style="width:100%;">登录</el-button>
+          <el-button size="medium" type="primary" @click="Login" style="width:100%;">Continue</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>

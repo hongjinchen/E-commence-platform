@@ -3,6 +3,9 @@
  -->
 <template>
   <div class="home" id="home" name="home">
+        <toTop>
+      <img class="go-top" src='../assets/imgs/ziyuan.png' v-if="btnFlag" @click="backTop">
+    </toTop>
     <!-- 轮播图 -->
     <div class="block">
       <el-carousel  :interval="4000" type="card" height="250px">
@@ -117,7 +120,9 @@
   </div>
 </template>
 <script>
+import toTop from "../components/toTop";
 export default {
+  components: {toTop},
   data() {
     return {
       carousel: [

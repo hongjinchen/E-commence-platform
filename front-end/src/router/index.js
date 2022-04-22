@@ -68,7 +68,12 @@ const routes = [
     meta: {
       requireAuth: true // 需要验证登录状态
     }
-  }
+  },
+  {
+    path: '/forum',
+    name: 'Forum',
+    component: () => import('../views/Forum.vue')
+  },
 ]
 
 const router = new Router({

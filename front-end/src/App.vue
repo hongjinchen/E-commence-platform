@@ -1,9 +1,5 @@
 <!--
  * @Description: 项目根组件
- * @Author: hai-27
- * @Date: 2020-02-07 16:23:00
- * @LastEditors: hai-27
- * @LastEditTime: 2020-04-05 13:14:48
  -->
 <template>
   <div id="app" name="app">
@@ -73,6 +69,9 @@
             </router-link>
           </div>
           <el-menu-item style="font-size:18px" index="/">Home</el-menu-item>
+          <el-menu-item style="font-size:18px" index="/forum"
+            >Forum</el-menu-item
+          >
           <el-menu-item style="font-size:18px" index="/goods"
             >Products</el-menu-item
           >
@@ -145,7 +144,7 @@
             <el-col :span="6">
               <div>
                 <h6>Quick Links</h6>
-                <ul  class="footer-links">
+                <ul class="footer-links">
                   <router-link :to="{ path: '/about' }">
                     About Us
                   </router-link>
@@ -224,18 +223,6 @@ export default {
       // 如果已经登录，设置vuex登录状态
       this.setUser(JSON.parse(localStorage.getItem("user")));
     }
-    /* window.setTimeout(() => {
-      this.$message({
-        duration: 0,
-        showClose: true,
-        message: `
-        <p>如果觉得这个项目还不错，</p>
-        <p style="padding:10px 0">您可以给项目源代码仓库点Star支持一下，谢谢！</p>
-        <p><a href="https://github.com/hai-27/vue-store" target="_blank">Github传送门</a></p>`,
-        dangerouslyUseHTMLString: true,
-        type: "success"
-      });
-    }, 1000 * 60); */
   },
   computed: {
     ...mapGetters(["getUser", "getNum"]),
