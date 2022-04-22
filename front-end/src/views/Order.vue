@@ -48,9 +48,9 @@
                 :to="{ path: '/goods/details', query: {productID:product.product_id} }"
               >{{product.product_name}}</router-link>
             </div>
-            <div class="pro-price">{{product.product_price}}元</div>
+            <div class="pro-price">{{product.product_price}}RMB</div>
             <div class="pro-num">{{product.product_num}}</div>
-            <div class="pro-total pro-total-in">{{product.product_price*product.product_num}}元</div>
+            <div class="pro-total pro-total-in">{{product.product_price*product.product_num}}RMB</div>
           </li>
         </ul>
         <div class="order-bar">
@@ -146,7 +146,7 @@ export default {
   margin: 0 auto;
 }
 .order .order-header p {
-  font-size: 28px;
+  font-size: 25px;
   line-height: 58px;
   float: left;
   font-weight: normal;
@@ -258,7 +258,7 @@ export default {
 .order .order-bar .order-bar-right .total-price-title {
   color: #ec9d8f;
   font-size: 14px;
-    margin-right: 20px;
+  margin-right: 20px;
 }
 .order .order-bar .order-bar-right .total-price {
   color: #ec9d8f;
@@ -275,7 +275,7 @@ export default {
   height: 300px;
   padding: 0 0 130px 558px;
   margin: 65px 0 0;
-  background: url(../assets/imgs/cart-empty.png) no-repeat 124px 0;
+  background: url(../assets/imgs/cart-empty.svg) no-repeat 124px 0;
   color: #b0b0b0;
   overflow: hidden;
 }

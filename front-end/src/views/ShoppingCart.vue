@@ -215,7 +215,7 @@ export default {
 /* 购物车头部CSS */
 .shoppingCart .cart-header {
   height: 64px;
-  border-bottom: 2px solid #EB7A67;
+  border-bottom: 2px solid #ec9d8f;
   background-color: #fff;
   margin-bottom: 20px;
 }
@@ -224,7 +224,7 @@ export default {
   margin: 0 auto;
 }
 .shoppingCart .cart-header p {
-  font-size: 28px;
+  font-size: 25px;
   line-height: 58px;
   float: left;
   font-weight: normal;
@@ -291,7 +291,7 @@ export default {
   font-size: 14px;
 }
 .shoppingCart .content ul .pro-name a:hover {
-  color: #EB7A67;
+  color: #ec9d8f;
 }
 .shoppingCart .content ul .pro-price {
   float: left;
@@ -311,7 +311,7 @@ export default {
   text-align: right;
 }
 .shoppingCart .content ul .pro-total-in {
-  color: #EB7A67;
+  color: #ec9d8f;
 }
 .shoppingCart .content ul .pro-action {
   float: left;
@@ -319,7 +319,7 @@ export default {
   text-align: center;
 }
 .shoppingCart .content ul .pro-action i:hover {
-  color: #EB7A67;
+  color: #ec9d8f;
 }
 /* 购物车表头及CSS END */
 
@@ -339,7 +339,7 @@ export default {
   color: #757575;
 }
 .shoppingCart .cart-bar .cart-bar-left a:hover {
-  color: #EB7A67;
+  color: #ec9d8f;
 }
 .shoppingCart .cart-bar .cart-bar-left .sep {
   color: #eee;
@@ -349,17 +349,17 @@ export default {
   color: #757575;
 }
 .shoppingCart .cart-bar .cart-bar-left .cart-total-num {
-  color: #EB7A67;
+  color: #ec9d8f;
 }
 .shoppingCart .cart-bar .cart-bar-right {
   float: right;
 }
 .shoppingCart .cart-bar .cart-bar-right .total-price-title {
-  color: #EB7A67;
+  color: #ec9d8f;
   font-size: 14px;
 }
 .shoppingCart .cart-bar .cart-bar-right .total-price {
-  color: #EB7A67;
+  color: #ec9d8f;
   font-size: 30px;
 }
 .shoppingCart .cart-bar .cart-bar-right .btn-primary {
@@ -368,7 +368,7 @@ export default {
   text-align: center;
   font-size: 18px;
   margin-left: 50px;
-  background: #EB7A67;
+  background: #ec9d8f;
   color: #fff;
 }
 .shoppingCart .cart-bar .cart-bar-right .btn-primary-disabled {
@@ -395,7 +395,7 @@ export default {
   height: 300px;
   padding: 0 0 130px 558px;
   margin: 65px 0 0;
-  background: url(../assets/imgs/cart-empty.png) no-repeat 124px 0;
+  background: url(../assets/imgs/cart-empty.svg) no-repeat 124px 0;
   color: #b0b0b0;
   overflow: hidden;
 }
