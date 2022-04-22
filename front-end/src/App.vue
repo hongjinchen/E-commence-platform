@@ -40,7 +40,7 @@
             </li>
             <li :class="getNum > 0 ? 'shopCart-full' : 'shopCart'">
               <router-link to="/shoppingCart">
-                <i class="el-icon-shopping-cart-full" style="color:#fff"></i>
+                <i style="color:#fff"></i>
                 Flower Basket
                 <span class="num">({{ getNum }})</span>
               </router-link>
