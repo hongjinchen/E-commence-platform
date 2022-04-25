@@ -77,8 +77,8 @@ const routes = [
 ]
 
 const router = new Router({
-  // base: '/dist',
-  // mode: 'history',
+  base: "/dist/",
+  mode: 'history',
   routes
 })
 

@@ -119,6 +119,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import toTop from "../components/toTop";
 export default {
@@ -202,15 +203,6 @@ export default {
     },
   },
   created() {
-    // 获取轮播图数据
-    // this.$axios
-    //   .post("/api/resources/carousel", {})
-    //   .then((res) => {
-    //     this.carousel = res.data.carousel;
-    //   })
-    //   .catch((err) => {
-    //     return Promise.reject(err);
-    //   });
     // 获取各类商品数据
     this.getPromo("手机", "phoneList");
     this.getPromo("电视机", "miTvList");
@@ -232,10 +224,12 @@ export default {
     getChildMsg(val) {
       this.applianceActive = val;
     },
+
     // 获取配件模块子组件传过来的数据
     getChildMsg2(val) {
       this.accessoryActive = val;
     },
+
     // 获取各类商品数据方法封装
     getPromo(categoryName, val, api) {
       api = api != undefined ? api : "/api/product/getPromoProduct";
