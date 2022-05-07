@@ -113,7 +113,7 @@ export default {
       //   if (valid) {
       this.$axios({
         method: "post",
-        url: "http://localhost:8083/back-end/user.php?action=userLogin",
+        url: "http://localhost:80/back-end/user.php?action=userLogin",
         data: {
           userName: this.LoginUser.name,
           password: this.LoginUser.pass,
@@ -139,6 +139,7 @@ export default {
         //     userName: this.LoginUser.name,
         //     password: this.LoginUser.pass
         //   })
+
       })
         .then((res) => {
           // “001”代表登录成功，其他的均为失败
