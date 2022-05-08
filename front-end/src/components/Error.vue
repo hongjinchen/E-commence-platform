@@ -12,6 +12,6 @@
 .error .main {
   margin: 0 362.5px;
   height: 500px;
-  background: url(../assets/imgs/error.png) no-repeat;
+  background: url(../assets/imgs/cart-empty.png) no-repeat;
 }
 </style>

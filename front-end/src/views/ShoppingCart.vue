@@ -129,7 +129,7 @@ export default {
       // 向后端发起更新购物车的数据库信息请求
       this.$axios
         .post("/api/user/shoppingCart/updateShoppingCart", {
-          user_id: this.$store.getters.getUser.user_id,
+          user_id: this.$store.state.user_id,
           product_id: productID,
           num: currentValue
         })
@@ -163,7 +163,7 @@ export default {
     deleteItem(e, id, productID) {
       this.$axios
         .post("/api/user/shoppingCart/deleteShoppingCart", {
-          user_id: this.$store.getters.getUser.user_id,
+          user_id: this.$store.state.user_id,
           product_id: productID
         })
         .then(res => {

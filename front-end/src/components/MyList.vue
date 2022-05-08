@@ -37,8 +37,6 @@
 <script>
 export default {
   name: "MyList",
-  // list为父组件传过来的商品列表
-  // isMore为是否显示“浏览更多”
   props: ["list", "isMore", "isDelete"],
   data() {
     return {};
@@ -62,7 +60,7 @@ export default {
     deleteCollect(product_id) {
       this.$axios
         .post("/api/user/collect/deleteCollect", {
-          user_id: this.$store.getters.getUser.user_id,
+          user_id: this.$store.state.user_id,
           product_id: product_id
         })
         .then(res => {

@@ -8,14 +8,7 @@
       <div class="topbar">
         <div class="nav">
           <ul>
-            <li v-if="!this.$store.getters.getUser">
-              <el-button type="text" @click="login">Login</el-button>
-              <span class="sep">|</span>
-              <el-button type="text" @click="register = true"
-                >Register</el-button
-              >
-            </li>
-            <li v-else>
+            <li v-if="this.$store.state.islogin">
               Welcome
               <el-popover placement="top" width="180" v-model="visible">
                 <p>Are you sure to log out?</p>
@@ -28,10 +21,18 @@
                   >
                 </div>
                 <el-button type="text" slot="reference">{{
-                  this.$store.getters.getUser.userName
+                  this.$store.state.userName
                 }}</el-button>
               </el-popover>
             </li>
+            <li v-else>
+              <el-button type="text" @click="login">Login</el-button>
+              <span class="sep">|</span>
+              <el-button type="text" @click="register = true"
+                >Register</el-button
+              >
+            </li>
+
             <li>
               <router-link to="/order">My order</router-link>
             </li>
@@ -45,10 +46,82 @@
                 <span class="num">({{ getNum }})</span>
               </router-link>
             </li>
+            <li>
+              <img
+                @click="openMyCenter = true"
+                style="height:30px;width:30px"
+                src="./assets/imgs/user.png"
+              />
+            </li>
           </ul>
         </div>
       </div>
       <!-- 顶部导航栏END -->
+
+      <!-- 用户中心 -->
+      <div v-show="openMyCenter">
+        <el-dialog
+          title="My Center"
+          :visible.sync="openMyCenter"
+          width="30%"
+          center
+        >
+          <div>
+            <div>User name: {{ this.$store.state.userName }}</div>
+            <div>User email: {{ user.email }}</div>
+            <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                <span>User address</span>
+                <el-button
+                  @click="dialogFormVisible = true"
+                  style="float: right; padding: 3px 0"
+                  type="text"
+                  >Add new address</el-button
+                >
+              </div>
+              <div
+                v-for="(item, index) in user.order"
+                :key="index"
+                class="text item"
+              >
+                <el-card>
+                  <el-row>
+                    <el-col :span="20"
+                      ><div class="grid-content bg-purple">
+                        <div>Receiver:{{ item.receiver }}</div>
+                        <div>Phone Number:{{ item.phoneNumber }}</div>
+                        <div>Address:{{ item.address }}</div>
+                      </div></el-col
+                    >
+                    <el-col :span="4"
+                      ><div class="grid-content bg-purple-light">
+                        <el-button @click="deletAddress(index)">
+                          <img
+                            style="height:15px;width:15px"
+                            src="./assets/imgs/sami-select.png"
+                          />
+                        </el-button></div
+                    ></el-col>
+                  </el-row>
+                </el-card>
+              </div>
+            </el-card>
+            <el-dialog
+              width="30%"
+              title="内层 Dialog"
+              :visible.sync="dialogFormVisible"
+              append-to-body
+            >
+            </el-dialog>
+          </div>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="openMyCenter = false"
+              >Continue</el-button
+            >
+          </span>
+        </el-dialog>
+      </div>
+      <!-- 用户中心END -->
 
       <!-- 顶栏容器 -->
       <el-header>
@@ -204,24 +277,52 @@
 <script>
 import { mapActions } from "vuex";
 import { mapGetters } from "vuex";
-
 export default {
   beforeUpdate() {
     this.activeIndex = this.$route.path;
   },
   data() {
     return {
+      user: {
+        name: "user",
+        email: "12345678901",
+        telephone: "12345678901",
+        order: [
+          {
+            receiver: "11",
+            phoneNumber: "11111111111",
+            address:
+              "当我们想从List集合中移除某些元素的时候一般会想到List集合中的remove方法",
+          },
+          {
+            receiver: "22",
+            phoneNumber: "22222222222",
+            address:
+              "当我们想从List集合中移除某些元素的时候一般会想到List集合中的remove方法",
+          },
+          {
+            receiver: "33",
+            phoneNumber: "33333333333",
+            address:
+              "当我们想从List集合中移除某些元素的时候一般会想到List集合中的remove方法",
+          },
+        ],
+      },
+      dialogFormVisible: false,
       activeIndex: "", // 头部导航栏选中的标签
       search: "", // 搜索条件
       register: false, // 是否显示注册组件
       visible: false, // 是否退出登录
+      openMyCenter: false,
     };
   },
+  components: {},
   created() {
+    this.getUserInfo();
     // 获取浏览器localStorage，判断用户是否已经登录
-    if (localStorage.getItem("user")) {
+    if (localStorage.getItem("user_id")) {
       // 如果已经登录，设置vuex登录状态
-      this.setUser(JSON.parse(localStorage.getItem("user")));
+      this.setUser(JSON.parse(localStorage.getItem("userName")));
     }
   },
   computed: {
@@ -264,7 +365,8 @@ export default {
     logout() {
       this.visible = false;
       // 清空本地登录信息
-      localStorage.setItem("user", "");
+      localStorage.setItem("userName", "");
+      localStorage.setItem("user_id", "");
       // 清空vuex登录信息
       this.setUser("");
       this.notifySucceed("成功退出登录");
@@ -281,11 +383,69 @@ export default {
         this.search = "";
       }
     },
+
+    getUserInfo() {
+      console.log(this.$store.state.userName);
+      this.user.name = this.$store.state.userName;
+      console.log(this.$store.state.userName);
+    },
+    deletAddress(res) {
+      var result = [];
+      for (var i = 0; i < this.user.order.length; i++) {
+        if (i != res) {
+          result.push(this.user.order[i]);
+        }
+      }
+      this.user.order = result;
+      console.log(result);
+      console.log("success!");
+    },
+    open() {
+      this.$prompt("Please enter a new address", "Input", {
+        confirmButtonText: "Continue",
+        cancelButtonText: "Cancel",
+      })
+        .then(({ value }) => {
+          this.$message({
+            type: "success",
+            message: "Your address is " + value,
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Cancel the action",
+          });
+        });
+    },
   },
 };
 </script>
 
 <style>
+/* 用户中心CSS */
+.text {
+  font-size: 14px;
+  color: black;
+}
+
+.item {
+  margin-bottom: 18px;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+
+.box-card {
+  width: 480px;
+}
+
 /* 全局CSS */
 * {
   padding: 0;
@@ -528,5 +688,6 @@ a:hover {
 .text {
   color: #fff;
 }
+
 /* 底栏容器CSS END */
 </style>

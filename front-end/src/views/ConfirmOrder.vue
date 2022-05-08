@@ -166,7 +166,7 @@ export default {
     addOrder() {
       this.$axios
         .post("/api/user/order/addOrder", {
-          user_id: this.$store.getters.getUser.user_id,
+          user_id: this.$store.state.user_id,
           products: this.getCheckGoods
         })
         .then(res => {

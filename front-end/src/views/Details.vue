@@ -145,13 +145,13 @@ export default {
     // 加入购物车
     addShoppingCart() {
       // 判断是否登录,没有登录则显示登录组件
-      if (!this.$store.getters.getUser) {
+      if (!this.$store.state.user_id) {
         this.$store.dispatch("setShowLogin", true);
         return;
       }
       this.$axios
         .post("/api/user/shoppingCart/addShoppingCart", {
-          user_id: this.$store.getters.getUser.user_id,
+          user_id: this.$store.state.user_id,
           product_id: this.productID
         })
         .then(res => {
@@ -181,13 +181,13 @@ export default {
     },
     addCollect() {
       // 判断是否登录,没有登录则显示登录组件
-      if (!this.$store.getters.getUser) {
+      if (!this.$store.state.user_id) {
         this.$store.dispatch("setShowLogin", true);
         return;
       }
       this.$axios
         .post("/api/user/collect/addCollect", {
-          user_id: this.$store.getters.getUser.user_id,
+          user_id: this.$store.state.user_id,
           product_id: this.productID
         })
         .then(res => {
