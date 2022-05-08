@@ -69,7 +69,6 @@
         title="Costumer Service"
         :visible.sync="customerServes"
         width="30%"
-        :before-close="handleClose"
       >
         <img style="height:400px; width:400px;margin:20px" src="./assets/imgs/CustomerService.png" />
         <div>Please contact customer service through the above QR code!</div>
@@ -89,7 +88,7 @@
         >
           <div>
             <div>User name: {{ this.$store.state.userName }}</div>
-            <div>User email: {{ user.email }}</div>
+            <div>User email: {{ this.$store.state.userEmail }}</div>
             <el-card class="box-card">
               <div slot="header" class="clearfix">
                 <span>User address</span>

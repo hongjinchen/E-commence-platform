@@ -68,7 +68,7 @@ export default {
         method: "post",
         url: "http://localhost:80/back-end/user.php?action=userLogin",
         data: {
-          userName: this.LoginUser.name,
+          username: this.LoginUser.name,
           password: this.LoginUser.pass,
         },
         transformRequest: [
@@ -86,37 +86,25 @@ export default {
             return ret.substring(0, ret.length - 1);
           },
         ],
-
-        // this.$axios
-        //   .post("http://localhost:80/user.php?action=userLogin", {
-        //     userName: this.LoginUser.name,
-        //     password: this.LoginUser.pass
-        //   })
       })
         .then((res) => {
-          // “001”代表登录成功，其他的均为失败
-          if (res.message === "Operation Success") {
-            // 隐藏登录组件
             this.isLogin = false;
             // 登录信息存到本地
             this.$store.state.userName = this.LoginUser.name;
+            this.$store.state.userEmail= res.data.userEmail
+            this.$store.state.user_id=res.data.user_id
+            // 改变登陆状态
             this.$store.state.islogin = true;
-            let user_id = "11111";
+            let user_id = res.data.user_id;
             localStorage.setItem("userName", this.LoginUser.name);
             localStorage.setItem("user_id", user_id);
-            console.log(this.LoginUser);
             console.log(this.$store.state.userName);
-            console.log(this.$store.state.islogin);
+            console.log(this.$store.state.userEmail);
             // 登录信息存到vuex
             this.setUser(this.LoginUser.name);
             // 弹出通知框提示登录成功信息
             this.notifySucceed("success!");
-          } else {
-            // 清空输入框的校验状态
-            // this.$refs["ruleForm"].resetFields();
-            // 弹出通知框提示登录失败信息
-            this.notifyError(res.data.msg);
-          }
+            console.log(res.data)
         })
         .catch((err) => {
           return Promise.reject(err);

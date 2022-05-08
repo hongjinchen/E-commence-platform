@@ -6,7 +6,7 @@
     <!-- 头部 -->
     <div class="page-header">
       <div class="title">
-        <p>{{productDetails.product_name}}</p>
+        <p>{{ productDetails.product_name }}</p>
         <div class="list">
           <ul>
             <li>
@@ -23,59 +23,56 @@
 
     <!-- 主要内容 -->
     <div class="main">
-      <!-- 左侧商品轮播图 -->
+      <!-- 左侧商品图 -->
       <div class="block">
-        <el-carousel height="560px" v-if="productPicture.length>1">
-          <el-carousel-item v-for="item in productPicture" :key="item.id">
-            <img style="height:560px;" :src="$target + item.product_picture" :alt="item.intro" />
-          </el-carousel-item>
-        </el-carousel>
-        <div v-if="productPicture.length==1">
-          <img
-            style="height:560px;"
-            :src="$target + productPicture[0].product_picture"
-            :alt="productPicture[0].intro"
-          />
-        </div>
+        <img style="height:560px;" :src="productPicture" />
       </div>
       <!-- 左侧商品轮播图END -->
 
       <!-- 右侧内容区 -->
       <div class="content">
-        <h1 class="name">{{productDetails.product_name}}</h1>
-        <p class="intro">{{productDetails.product_intro}}</p>
+        <h1 class="name">{{ productDetails.product_name }}</h1>
+        <p class="intro">{{ productDetails.product_intro }}</p>
         <div class="price">
-          <span>{{productDetails.product_selling_price}}RMB</span>
+          <span>{{ productDetails.product_selling_price }}RMB</span>
           <span
-            v-show="productDetails.product_price != productDetails.product_selling_price"
+            v-show="
+              productDetails.product_price !=
+                productDetails.product_selling_price
+            "
             class="del"
-          >{{productDetails.product_price}}RMB</span>
+            >{{ productDetails.product_price }}RMB</span
+          >
         </div>
         <div class="pro-list">
-          <span class="pro-name">{{productDetails.product_name}}</span>
+          <span class="pro-name">{{ productDetails.product_name }}</span>
           <span class="pro-price">
-            <span>{{productDetails.product_selling_price}}RMB</span>
+            <span>{{ productDetails.product_selling_price }}RMB</span>
             <span
-              v-show="productDetails.product_price != productDetails.product_selling_price"
+              v-show="
+                productDetails.product_price !=
+                  productDetails.product_selling_price
+              "
               class="pro-del"
-            >{{productDetails.product_price}}RMB</span>
+              >{{ productDetails.product_price }}RMB</span
+            >
           </span>
-          <p class="price-sum">Subtotal: {{productDetails.product_selling_price}}RMB</p>
+          <p class="price-sum">
+            Subtotal: {{ productDetails.product_selling_price }}RMB
+          </p>
         </div>
         <!-- 内容区底部按钮 -->
         <div class="button">
-          <el-button class="shop-cart" :disabled="dis" @click="addShoppingCart">Add to cart</el-button>
+          <el-button class="shop-cart" :disabled="dis" @click="addShoppingCart"
+            >Add to cart</el-button
+          >
           <el-button class="like" @click="addCollect">Wishlist</el-button>
         </div>
         <!-- 内容区底部按钮END -->
         <div class="pro-policy">
           <ul>
-            <li>
-              <i class="el-icon-circle-check"></i> Base Direct Delivery
-            </li>
-            <li>
-              <i class="el-icon-circle-check"></i> After Sale Service
-            </li>
+            <li><i class="el-icon-circle-check"></i> Base Direct Delivery</li>
+            <li><i class="el-icon-circle-check"></i> After Sale Service</li>
             <li>
               <i class="el-icon-circle-check"></i> Online Customer Service
             </li>
@@ -95,7 +92,7 @@ export default {
       dis: false, // 控制“加入购物车按钮是否可用”
       productID: "", // 商品id
       productDetails: "", // 商品详细信息
-      productPicture: "" // 商品图片
+      productPicture: "", // 商品图片
     };
   },
   // 通过路由获取商品id
@@ -109,49 +106,90 @@ export default {
     productID: function(val) {
       this.getDetails(val);
       this.getDetailsPicture(val);
-    }
+    },
   },
   methods: {
     ...mapActions(["unshiftShoppingCart", "addShoppingCartNum"]),
     // 获取商品详细信息
     getDetails(val) {
-      this.$axios
-        .post("/api/product/getDetails", {
-          productID: val
+      this.$axios({
+        method: "post",
+        url: "http://localhost:80/back-end/product.php?action=getProductById",
+        data: {
+          product_id: val,
+        },
+        transformRequest: [
+          function(data) {
+            // 将{username:111,password:111} 转成 username=111&password=111
+            var ret = "";
+            for (var it in data) {
+              // 如果要发送中文 编码
+              ret +=
+                encodeURIComponent(it) +
+                "=" +
+                encodeURIComponent(data[it]) +
+                "&";
+            }
+            return ret.substring(0, ret.length - 1);
+          },
+        ],
+      })
+        .then((res) => {
+          console.log(res.data);
+          this.productDetails = res.data.product_info;
+          this.productPicture = res.data.product_info.product_picture;
+          alert("!");
         })
-        .then(res => {
-          this.productDetails = res.data.Product[0];
-        })
-        .catch(err => {
+        .catch((err) => {
           return Promise.reject(err);
         });
     },
-    // 获取商品图片
-    getDetailsPicture(val) {
-      this.$axios
-        .post("/api/product/getDetailsPicture", {
-          productID: val
-        })
-        .then(res => {
-          this.productPicture = res.data.ProductPicture;
-        })
-        .catch(err => {
-          return Promise.reject(err);
-        });
-    },
+
     // 加入购物车
     addShoppingCart() {
       // 判断是否登录,没有登录则显示登录组件
-      if (!this.$store.state.user_id) {
+      if (!this.$store.state.islogin) {
         this.$store.dispatch("setShowLogin", true);
         return;
       }
+
+      this.$axios({
+        method: "post",
+        url: "http://localhost:80/back-end/shoppingChart.php?action=addChart",
+        data: {
+          user_id: this.$store.state.user_id,
+          product_id: this.productID,
+          num: 1,
+        },
+        transformRequest: [
+          function(data) {
+            // 将{username:111,password:111} 转成 username=111&password=111
+            var ret = "";
+            for (var it in data) {
+              // 如果要发送中文 编码
+              ret +=
+                encodeURIComponent(it) +
+                "=" +
+                encodeURIComponent(data[it]) +
+                "&";
+            }
+            return ret.substring(0, ret.length - 1);
+          },
+        ],
+      })
+        .then((res) => {
+          this.notifySucceed("success!");
+          console.log(res.data);
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
       this.$axios
         .post("/api/user/shoppingCart/addShoppingCart", {
           user_id: this.$store.state.user_id,
-          product_id: this.productID
+          product_id: this.productID,
         })
-        .then(res => {
+        .then((res) => {
           switch (res.data.code) {
             case "001":
               // 新加入购物车成功
@@ -172,7 +210,7 @@ export default {
               this.notifyError(res.data.msg);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           return Promise.reject(err);
         });
     },
@@ -185,9 +223,9 @@ export default {
       this.$axios
         .post("/api/user/collect/addCollect", {
           user_id: this.$store.state.user_id,
-          product_id: this.productID
+          product_id: this.productID,
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.code == "001") {
             // 添加收藏成功
             this.notifySucceed(res.data.msg);
@@ -196,11 +234,11 @@ export default {
             this.notifyError(res.data.msg);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           return Promise.reject(err);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 <style>
@@ -327,7 +365,7 @@ export default {
 }
 #details .main .content .button .shop-cart {
   width: 340px;
-  background-color:#ec9d8f;
+  background-color: #ec9d8f;
 }
 #details .main .content .button .shop-cart:hover {
   background-color: #f25807;

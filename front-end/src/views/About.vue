@@ -1,9 +1,5 @@
 <!--
- * @Description: 关于我们页面组件，未完成
- * @Author: hai-27
- * @Date: 2020-02-07 16:23:00
- * @LastEditors: hai-27
- * @LastEditTime: 2020-03-12 19:36:46
+ * @Description: 关于我们，description of project
  -->
 <template>
   <div class="about" id="about" name="about">
@@ -14,16 +10,15 @@
       </div>
     </div>
     <div class="about-content">
-      <MyMarkdown></MyMarkdown>
+      <div>救命啊！！！</div>
     </div>
   </div>
 </template>
 <script>
-import MyMarkdown from "../components/MyMarkdown";
 export default {
   components: {
-    MyMarkdown
-  }
+    
+  },
 };
 </script>
 <style scoped>

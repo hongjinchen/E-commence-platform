@@ -3,12 +3,17 @@
  -->
 <template>
   <div class="home" id="home" name="home">
-        <toTop>
-      <img class="go-top" src='../assets/imgs/ziyuan.png' v-if="btnFlag" @click="backTop">
+    <toTop>
+      <img
+        class="go-top"
+        src="../assets/imgs/ziyuan.png"
+        v-if="btnFlag"
+        @click="backTop"
+      />
     </toTop>
     <!-- 轮播图 -->
     <div class="block">
-      <el-carousel  :interval="4000" type="card" height="250px">
+      <el-carousel :interval="4000" type="card" height="250px">
         <el-carousel-item v-for="item in carousel" :key="item.carousel_id">
           <img
             style="height:410px;"
@@ -21,7 +26,7 @@
     <!-- 轮播图END -->
     <div class="main-box">
       <div class="main">
-        <!-- 手机商品展示区域 -->
+        <!-- 所有商品展示区域 -->
         <div class="phone">
           <div class="box-hd">
             <div class="title">Daily Recommondation</div>
@@ -29,92 +34,158 @@
           <div class="box-bd">
             <div class="promo-list">
               <router-link to>
-                <img :src="$target + 'public/imgs/phone/phone.png'" />
+                <img height="600px" src="../assets/imgs/picture1.png" />
               </router-link>
             </div>
             <div class="list">
-              <MyList :list="phoneList" :isMore="true"></MyList>
+              <el-card style="height:620px;margin-left:20px">
+                <el-row gutter="12">
+                  <el-col
+                    :span="12"
+                    style="height:300px"
+                    v-for="item in AllProductList"
+                    :key="item"
+                  >
+                    <!-- <el-card
+                      @click="goToDetail(item.product_id)"
+                      :body-style="{ padding: '0px' }"
+                    > -->
+                    <el-card :body-style="{ padding: '0px' }">
+                      <el-row>
+                        <el-col :span="15">
+                          <img
+                            @click="goToDetail(item.product_id)"
+                            :src="item.product_picture"
+                            class="image"
+                        /></el-col>
+                        <el-col :span="9">
+                          <div
+                            class="title"
+                            style="margin-bottom:10px;margin-top:10px"
+                          >
+                            {{ item.product_name }}
+                          </div>
+                          <el-card class="context">
+                            {{ item.product_intro }}
+                          </el-card>
+                        </el-col>
+                      </el-row>
+                    </el-card>
+                  </el-col>
+                </el-row>
+              </el-card>
             </div>
           </div>
         </div>
-        <!-- 手机商品展示区域END -->
+        <!-- 所有商品展示区域END -->
 
-        <!-- 家电商品展示区域 -->
+        <!-- 鲜切花展示区域 -->
         <div class="appliance" id="promo-menu">
           <div class="box-hd">
             <div class="title">Fresh Cut Flowers</div>
-            <div class="more" id="more">
-              <MyMenu :val="2" @fromChild="getChildMsg">
-                <span slot="1">Hot</span>
-                <span slot="2">New Product </span>
-              </MyMenu>
-            </div>
           </div>
           <div class="box-bd">
             <div class="promo-list">
               <ul>
                 <li>
-                  <img
-                    :src="
-                      $target + 'public/imgs/appliance/appliance-promo1.png'
-                    "
-                  />
+                  <img src="../assets/imgs/picture2.png" />
                 </li>
                 <li>
-                  <img
-                    :src="
-                      $target + 'public/imgs/appliance/appliance-promo2.png'
-                    "
-                  />
+                  <img src="../assets/imgs/picture3.png" />
                 </li>
               </ul>
             </div>
             <div class="list">
-              <MyList :list="applianceList" :isMore="true"></MyList>
+              <el-card style="height:620px;margin-left:20px">
+                <el-row gutter="12">
+                  <el-col
+                    :span="12"
+                    style="height:300px"
+                    v-for="item in FlowerCutList"
+                    :key="item"
+                  >
+                    <el-card
+                      @click="goToDetail(item.product_id)"
+                      :body-style="{ padding: '0px' }"
+                    >
+                      <el-row>
+                        <el-col :span="15">
+                          <img :src="item.product_picture" class="image"
+                        /></el-col>
+                        <el-col :span="9">
+                          <div
+                            class="title"
+                            style="margin-bottom:10px;margin-top:10px"
+                          >
+                            {{ item.product_name }}
+                          </div>
+                          <el-card class="context">
+                            {{ item.product_intro }}
+                          </el-card>
+                        </el-col>
+                      </el-row>
+                    </el-card>
+                  </el-col>
+                </el-row>
+              </el-card>
             </div>
           </div>
         </div>
-        <!-- 家电商品展示区域END -->
+        <!-- 鲜切花展示区域END -->
 
-        <!-- 配件商品展示区域 -->
+        <!-- 成品花束展示区域 -->
         <div class="accessory" id="promo-menu">
           <div class="box-hd">
             <div class="title">Designed Bouquets</div>
-            <div class="more" id="more">
-              <MyMenu :val="3" @fromChild="getChildMsg2">
-                <span slot="1">Hot</span>
-                <span slot="2">New Product </span>
-                <span slot="3">Accessories</span>
-              </MyMenu>
-            </div>
           </div>
           <div class="box-bd">
             <div class="promo-list">
               <ul>
                 <li>
-                  <img
-                    :src="
-                      $target + 'public/imgs/accessory/accessory-promo1.png'
-                    "
-                    alt
-                  />
+                  <img src="../assets/imgs/picture4.png" alt />
                 </li>
                 <li>
-                  <img
-                    :src="
-                      $target + 'public/imgs/accessory/accessory-promo2.png'
-                    "
-                    alt
-                  />
+                  <img src="../assets/imgs/picture5.png" alt />
                 </li>
               </ul>
             </div>
             <div class="list">
-              <MyList :list="accessoryList" :isMore="true"></MyList>
+              <el-card style="height:620px;margin-left:20px">
+                <el-row gutter="12">
+                  <el-col
+                    :span="12"
+                    style="height:300px"
+                    v-for="item in BouquetsList"
+                    :key="item"
+                  >
+                    <el-card
+                      @click="goToDetail(item.product_id)"
+                      :body-style="{ padding: '0px' }"
+                    >
+                      <el-row>
+                        <el-col :span="15">
+                          <img :src="item.product_picture" class="image"
+                        /></el-col>
+                        <el-col :span="9">
+                          <div
+                            class="title"
+                            style="margin-bottom:10px;margin-top:10px"
+                          >
+                            {{ item.product_name }}
+                          </div>
+                          <el-card class="context">
+                            {{ item.product_intro }}
+                          </el-card>
+                        </el-col>
+                      </el-row>
+                    </el-card>
+                  </el-col>
+                </el-row>
+              </el-card>
             </div>
           </div>
         </div>
-        <!-- 配件商品展示区域END -->
+        <!-- 成品花束展示区域END -->
       </div>
     </div>
   </div>
@@ -123,7 +194,7 @@
 <script>
 import toTop from "../components/toTop";
 export default {
-  components: {toTop},
+  components: { toTop },
   data() {
     return {
       carousel: [
@@ -139,7 +210,7 @@ export default {
         },
         {
           carousel_id: 3,
-          imgPath:  require("../assets/imgs/picture3.jpg"),
+          imgPath: require("../assets/imgs/picture3.jpg"),
           describes: "123456",
         },
         {
@@ -148,105 +219,70 @@ export default {
           describes: "123456",
         },
       ], // 轮播图数据
-      phoneList: "", // 手机商品列表
-      miTvList: "", // 小米电视商品列表
-      applianceList: "", // 家电商品列表
-      applianceHotList: "", //热门家电商品列表
-      accessoryList: "", //配件商品列表
-      accessoryHotList: "", //热门配件商品列表
-      protectingShellList: "", // 保护套商品列表
-      chargerList: "", //充电器商品列表
-      applianceActive: 1, // 家电当前选中的商品分类
-      accessoryActive: 1, // 配件当前选中的商品分类
+      AllProductList: [],
+      BouquetsList: [],
+      FlowerCutList: [],
     };
   },
-  watch: {
-    // 家电当前选中的商品分类，响应不同的商品数据
-    applianceActive: function(val) {
-      // 页面初始化的时候把applianceHotList(热门家电商品列表)直接赋值给applianceList(家电商品列表)
-      // 所以在切换商品列表时判断applianceHotList是否为空,为空则是第一次切换,把applianceList赋值给applianceHotList
-      if (this.applianceHotList == "") {
-        this.applianceHotList = this.applianceList;
-      }
-      if (val == 1) {
-        // 1为热门商品
-        this.applianceList = this.applianceHotList;
-        return;
-      }
-      if (val == 2) {
-        // 2为电视商品
-        this.applianceList = this.miTvList;
-        return;
-      }
-    },
-    accessoryActive: function(val) {
-      // 页面初始化的时候把accessoryHotList(热门配件商品列表)直接赋值给accessoryList(配件商品列表)
-      // 所以在切换商品列表时判断accessoryHotList是否为空,为空则是第一次切换,把accessoryList赋值给accessoryHotList
-      if (this.accessoryHotList == "") {
-        this.accessoryHotList = this.accessoryList;
-      }
-      if (val == 1) {
-        // 1为热门商品
-        this.accessoryList = this.accessoryHotList;
-        return;
-      }
-      if (val == 2) {
-        // 2为保护套商品
-        this.accessoryList = this.protectingShellList;
-        return;
-      }
-      if (val == 3) {
-        //3 为充电器商品
-        this.accessoryList = this.chargerList;
-        return;
-      }
-    },
-  },
   created() {
-    // 获取各类商品数据
-    this.getPromo("手机", "phoneList");
-    this.getPromo("电视机", "miTvList");
-    this.getPromo("保护套", "protectingShellList");
-    this.getPromo("充电器", "chargerList");
-    this.getPromo(
-      ["电视机", "空调", "洗衣机"],
-      "applianceList",
-      "/api/product/getHotProduct"
-    );
-    this.getPromo(
-      ["保护套", "保护膜", "充电器", "充电宝"],
-      "accessoryList",
-      "/api/product/getHotProduct"
-    );
+    // 获取数据
+    this.getAllProducts();
   },
   methods: {
-    // 获取家电模块子组件传过来的数据
-    getChildMsg(val) {
-      this.applianceActive = val;
-    },
-
-    // 获取配件模块子组件传过来的数据
-    getChildMsg2(val) {
-      this.accessoryActive = val;
-    },
-
-    // 获取各类商品数据方法封装
-    getPromo(categoryName, val, api) {
-      api = api != undefined ? api : "/api/product/getPromoProduct";
-      this.$axios
-        .post(api, {
-          categoryName,
-        })
+    getAllProducts() {
+      this.$axios({
+        method: "post",
+        url: "http://localhost:80/back-end/product.php?action=getAllProducts",
+      })
         .then((res) => {
-          this[val] = res.data.Product;
+          this.AllProductList = res.data.products;
+          for (let i = 0; i < res.data.products.length; i++) {
+            if (res.data.products[i].category_id == 1) {
+              this.BouquetsList.push(res.data.products[i]);
+            } else {
+              this.FlowerCutList.push(res.data.products[i]);
+            }
+          }
+          console.log(res.data);
         })
         .catch((err) => {
           return Promise.reject(err);
         });
+    },
+    goToDetail(index) {
+      // 前往详情页
+      alert(index);
+      this.$router.push({
+        path: "/goods/details",
+        query: { productID: index },
+      });
+    },
+    Test() {
+      alert("????");
     },
   },
 };
 </script>
 <style scoped>
 @import "../assets/css/index.css";
+.image {
+  height: 280px;
+  width: 280px;
+}
+.title {
+  overflow: hidden; /*超出部分隐藏*/
+  text-overflow: ellipsis; /* 超出部分显示省略号 */
+  white-space: nowrap; /*规定段落中的文本不进行换行 */
+  width: auto; /*需要配合宽度来使用*/
+  font-size: 20px;
+}
+.context {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  width: auto; /*需要配合宽度来使用*/
+  height: 220px;
+  font-size: 12px;
+}
 </style>
