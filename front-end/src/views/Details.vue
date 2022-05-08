@@ -15,9 +15,6 @@
             <li>
               <router-link to>Parameter</router-link>
             </li>
-            <li>
-              <router-link to>User comments</router-link>
-            </li>
           </ul>
         </div>
       </div>

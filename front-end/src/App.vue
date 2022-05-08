@@ -53,11 +53,32 @@
                 src="./assets/imgs/user.png"
               />
             </li>
+            <li>
+              <img
+                @click="customerServes = true"
+                style="height:30px;width:30px"
+                src="./assets/imgs/bussiness-man.png"
+              />
+            </li>
           </ul>
         </div>
       </div>
       <!-- 顶部导航栏END -->
-
+      <!-- 客服联系 -->
+      <el-dialog
+        title="Costumer Service"
+        :visible.sync="customerServes"
+        width="30%"
+        :before-close="handleClose"
+      >
+        <img style="height:400px; width:400px;margin:20px" src="./assets/imgs/CustomerService.png" />
+        <div>Please contact customer service through the above QR code!</div>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="customerServes = false"
+            >OK</el-button
+          >
+        </span>
+      </el-dialog>
       <!-- 用户中心 -->
       <div v-show="openMyCenter">
         <el-dialog
@@ -108,10 +129,26 @@
             </el-card>
             <el-dialog
               width="30%"
-              title="内层 Dialog"
               :visible.sync="dialogFormVisible"
               append-to-body
             >
+              <el-form ref="form" :model="form" label-width="80px">
+                <el-form-item label="Receiver">
+                  <el-input v-model="form.receiver"></el-input>
+                </el-form-item>
+                <el-form-item label="Phone Number">
+                  <el-input v-model="form.phoneNumber"></el-input>
+                </el-form-item>
+                <el-form-item label="Address">
+                  <el-input type="textarea" v-model="form.address"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="onSubmit"
+                    >Continue</el-button
+                  >
+                  <el-button>Cancel</el-button>
+                </el-form-item>
+              </el-form>
             </el-dialog>
           </div>
           <span slot="footer" class="dialog-footer">
@@ -286,7 +323,6 @@ export default {
       user: {
         name: "user",
         email: "12345678901",
-        telephone: "12345678901",
         order: [
           {
             receiver: "11",
@@ -314,6 +350,12 @@ export default {
       register: false, // 是否显示注册组件
       visible: false, // 是否退出登录
       openMyCenter: false,
+      customerServes: false, //联系客服diolog
+      form: {
+        receiver: "",
+        phoneNumber: "",
+        address: "",
+      },
     };
   },
   components: {},
@@ -383,12 +425,13 @@ export default {
         this.search = "";
       }
     },
-
+    // 获取用户信息
     getUserInfo() {
       console.log(this.$store.state.userName);
       this.user.name = this.$store.state.userName;
       console.log(this.$store.state.userName);
     },
+    // 删除地址
     deletAddress(res) {
       var result = [];
       for (var i = 0; i < this.user.order.length; i++) {
@@ -400,23 +443,10 @@ export default {
       console.log(result);
       console.log("success!");
     },
-    open() {
-      this.$prompt("Please enter a new address", "Input", {
-        confirmButtonText: "Continue",
-        cancelButtonText: "Cancel",
-      })
-        .then(({ value }) => {
-          this.$message({
-            type: "success",
-            message: "Your address is " + value,
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "Cancel the action",
-          });
-        });
+
+    // 新增地址
+    onSubmit() {
+      this.user.order.push(this.form);
     },
   },
 };
