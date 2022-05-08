@@ -99,7 +99,7 @@ export default {
             localStorage.setItem("userName", this.LoginUser.name);
             localStorage.setItem("user_id", user_id);
             console.log(this.$store.state.userName);
-            console.log(this.$store.state.userEmail);
+            console.log( this.$store.state.user_id);
             // 登录信息存到vuex
             this.setUser(this.LoginUser.name);
             // 弹出通知框提示登录成功信息

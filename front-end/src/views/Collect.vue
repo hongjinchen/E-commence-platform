@@ -39,18 +39,36 @@ export default {
   },
   activated() {
     // 获取收藏数据
-    this.$axios
-      .post("/api/user/collect/getCollect", {
-        user_id: this.$store.state.user_id
+          this.$axios({
+        method: "post",
+        url: "http://localhost:80/back-end/collect.php?action=getUserCollects",
+        data: {
+          user_id:  this.$store.state.user_id
+        },
+        transformRequest: [
+          function(data) {
+            // 将{username:111,password:111} 转成 username=111&password=111
+            var ret = "";
+            for (var it in data) {
+              // 如果要发送中文 编码
+              ret +=
+                encodeURIComponent(it) +
+                "=" +
+                encodeURIComponent(data[it]) +
+                "&";
+            }
+            return ret.substring(0, ret.length - 1);
+          },
+        ],
       })
-      .then(res => {
-        if (res.data.code === "001") {
-          this.collectList = res.data.collectList;
-        }
-      })
-      .catch(err => {
-        return Promise.reject(err);
-      });
+        .then((res) => {
+           this.collectList = res.data;
+            this.notifySucceed("success!");
+            console.log(res.data)
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
   }
 };
 </script>

@@ -109,7 +109,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["unshiftShoppingCart", "addShoppingCartNum"]),
+    ...mapActions(["unshiftShoppingCart", "addShoppingCartNum","setUser", "setShowLogin"]),
     // 获取商品详细信息
     getDetails(val) {
       this.$axios({
@@ -216,23 +216,36 @@ export default {
     },
     addCollect() {
       // 判断是否登录,没有登录则显示登录组件
-      if (!this.$store.state.user_id) {
+      if (!this.$store.state.islogin) {
         this.$store.dispatch("setShowLogin", true);
         return;
       }
-      this.$axios
-        .post("/api/user/collect/addCollect", {
+console.log(this.$store.state.user_id)
+      this.$axios({
+        method: "post",
+        url: "http://localhost:80/back-end/collect.php?action=addCollect",
+        data: {
           user_id: this.$store.state.user_id,
           product_id: this.productID,
-        })
+        },
+        transformRequest: [
+          function(data) {
+            // 将{username:111,password:111} 转成 username=111&password=111
+            var ret = "";
+            for (var it in data) {
+              // 如果要发送中文 编码
+              ret +=
+                encodeURIComponent(it) +
+                "=" +
+                encodeURIComponent(data[it]) +
+                "&";
+            }
+            return ret.substring(0, ret.length - 1);
+          },
+        ],
+      })
         .then((res) => {
-          if (res.data.code == "001") {
-            // 添加收藏成功
             this.notifySucceed(res.data.msg);
-          } else {
-            // 添加收藏失败
-            this.notifyError(res.data.msg);
-          }
         })
         .catch((err) => {
           return Promise.reject(err);
