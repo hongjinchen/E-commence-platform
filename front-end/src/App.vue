@@ -47,14 +47,14 @@
               </router-link>
             </li>
             <li>
-              <img
+              <img  v-if="this.$store.state.islogin" 
                 @click="openMyCenter = true"
                 style="height:30px;width:30px"
                 src="./assets/imgs/user.png"
               />
             </li>
             <li>
-              <img
+              <img  v-if="this.$store.state.islogin" 
                 @click="customerServes = true"
                 style="height:30px;width:30px"
                 src="./assets/imgs/bussiness-man.png"
@@ -70,7 +70,10 @@
         :visible.sync="customerServes"
         width="30%"
       >
-        <img style="height:400px; width:400px;margin:20px" src="./assets/imgs/CustomerService.png" />
+        <img
+          style="height:400px; width:400px;margin:20px"
+          src="./assets/imgs/CustomerService.png"
+        />
         <div>Please contact customer service through the above QR code!</div>
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="customerServes = false"
@@ -78,8 +81,9 @@
           >
         </span>
       </el-dialog>
+
       <!-- 用户中心 -->
-      <div v-show="openMyCenter">
+      <div v-if="this.$store.state.islogin" v-show="openMyCenter">
         <el-dialog
           title="My Center"
           :visible.sync="openMyCenter"
@@ -406,6 +410,10 @@ export default {
     logout() {
       this.visible = false;
       // 清空本地登录信息
+      this.$store.state.userName = "";
+      this.$store.state.userEmail = "";
+      this.$store.state.user_id = "";
+      this.$store.state.islogin = false;
       localStorage.setItem("userName", "");
       localStorage.setItem("user_id", "");
       // 清空vuex登录信息

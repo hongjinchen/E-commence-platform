@@ -10,7 +10,7 @@
         <el-breadcrumb-item>Products</el-breadcrumb-item>
         <el-breadcrumb-item v-if="search">Search</el-breadcrumb-item>
         <el-breadcrumb-item v-else>List</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="search">{{search}}</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="search">{{ search }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- 面包屑END -->
@@ -24,7 +24,7 @@
             v-for="item in categoryList"
             :key="item.category_id"
             :label="item.category_name"
-            :name="''+item.category_id"
+            :name="'' + item.category_id"
           />
         </el-tabs>
       </div>
@@ -34,8 +34,60 @@
     <!-- 主要内容区 -->
     <div class="main">
       <div class="list">
-        <MyList :list="product" v-if="product.length>0"></MyList>
-        <div v-else class="none-product">Sorry, we do not provide relevant products at present, please have a look at other products</div>
+        <div v-if="productList.length > 0">
+          <div id="myList" class="myList">
+            <ul>
+              <li v-for="item in productList" :key="item.product_id">
+                <el-popover placement="top">
+                  <p>Are you sure?</p>
+                  <div style="text-align: right; margin: 10px 0 0">
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="deleteCollect(item.product_id)"
+                      >Continue</el-button
+                    >
+                  </div>
+                  <i
+                    class="el-icon-close delete"
+                    slot="reference"
+                    v-show="isDelete"
+                  ></i>
+                </el-popover>
+                <router-link
+                  :to="{
+                    path: '/goods/details',
+                    query: { productID: item.product_id },
+                  }"
+                >
+                  <img :src="item.product_picture" alt />
+                  <h2>{{ item.product_name }}</h2>
+                  <h3>{{ item.product_title }}</h3>
+                  <p>
+                    <span>{{ item.product_selling_price }}RMB</span>
+                    <span
+                      v-show="item.product_price != item.product_selling_price"
+                      class="del"
+                      >{{ item.product_price }}RMB</span
+                    >
+                  </p>
+                </router-link>
+              </li>
+              <li v-show="isMore && list.length >= 1" id="more">
+                <router-link
+                  :to="{ path: '/goods', query: { categoryID: categoryID } }"
+                >
+                  Browse more...
+                  <i class="el-icon-d-arrow-right"></i>
+                </router-link>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div v-else class="none-product">
+          Sorry, we do not provide relevant products at present, please have a
+          look at other products
+        </div>
       </div>
       <!-- 分页 -->
       <div class="pagination">
@@ -58,18 +110,20 @@ export default {
     return {
       categoryList: "", //分类列表
       categoryID: [], // 分类id
-      product: "", // 商品列表
-      productList: "",
+      productList: [],
+      BouquetsList: [],
+      FlowerCutList: [],
       total: 0, // 商品总量
       pageSize: 15, // 每页显示的商品数量
       currentPage: 1, //当前页码
       activeName: "-1", // 分类列表当前选中的id
-      search: "" // 搜索条件
+      search: "", // 搜索条件
     };
   },
   created() {
     // 获取分类列表
     this.getCategory();
+    this.getData();
   },
   activated() {
     this.activeName = "-1"; // 初始化分类列表当前选中的id为-1
@@ -109,7 +163,7 @@ export default {
       // 更新地址栏链接，方便刷新页面可以回到原来的页面
       this.$router.push({
         path: "/goods",
-        query: { categoryID: this.categoryID }
+        query: { categoryID: this.categoryID },
       });
     },
     // 监听搜索条件，响应相应的商品
@@ -133,13 +187,15 @@ export default {
           this.search = val.query.search;
         }
       }
-    }
+    },
   },
+
   methods: {
     // 返回顶部
     backtop() {
       const timer = setInterval(function() {
-        const top = document.documentElement.scrollTop || document.body.scrollTop;
+        const top =
+          document.documentElement.scrollTop || document.body.scrollTop;
         const speed = Math.floor(-top / 5);
         document.documentElement.scrollTop = document.body.scrollTop =
           top + speed;
@@ -156,64 +212,78 @@ export default {
         this.getProductBySearch();
       } else {
         this.getData();
+        this.FlowerCutList = [];
+        this.BouquetsList = [];
       }
       this.backtop();
     },
-    // 向后端请求分类列表数据
+
+    // 请求分类列表数据
     getCategory() {
-      this.$axios
-        .post("/api/product/getCategory", {})
-        .then(res => {
-          const val = {
-            category_id: 0,
-            category_name: "All"
-          };
-          const cate = res.data.category;
-          cate.unshift(val);
-          this.categoryList = cate;
+      this.$axios({
+        method: "post",
+        url: "http://localhost:80/back-end/category.php?action=getCategories",
+      })
+        .then((res) => {
+          for (let i = 0; i < res.data.categories.length; i++) {
+            console.log(res.data.categories[i]);
+          }
+          this.categoryList = res.data.categories;
+          // 弹出通知框提示登录成功信息
+          this.notifySucceed("success!");
+          console.log(this.categoryList);
         })
-        .catch(err => {
+        .catch((err) => {
           return Promise.reject(err);
         });
     },
     // 向后端请求全部商品或分类商品数据
     getData() {
-      // 如果分类列表为空则请求全部商品数据，否则请求分类商品数据
-      const api =
-        this.categoryID.length == 0
-          ? "/api/product/getAllProduct"
-          : "/api/product/getProductByCategory";
-      this.$axios
-        .post(api, {
-          categoryID: this.categoryID,
-          currentPage: this.currentPage,
-          pageSize: this.pageSize
+      this.productList = [];
+      this.BouquetsList = [];
+      this.FlowerCutList = [];
+      this.$axios({
+        method: "post",
+        url: "http://localhost:80/back-end/product.php?action=getAllProducts",
+      })
+        .then((res) => {
+          // this.productList = res.data.products;
+          for (let i = 0; i < res.data.products.length; i++) {
+            if (res.data.products[i].category_id == 1) {
+              this.BouquetsList.push(res.data.products[i]);
+            } else {
+              this.FlowerCutList.push(res.data.products[i]);
+            }
+          }
         })
-        .then(res => {
-          this.product = res.data.Product;
-          this.total = res.data.total;
-        })
-        .catch(err => {
+        .catch((err) => {
           return Promise.reject(err);
         });
+      console.log("categoryID" + this.categoryID);
+      if (this.categoryID == 1) {
+        this.productList = this.BouquetsList;
+      } else {
+        this.productList = this.FlowerCutList;
+      }
     },
+
     // 通过搜索条件向后端请求商品数据
     getProductBySearch() {
       this.$axios
         .post("/api/product/getProductBySearch", {
           search: this.search,
           currentPage: this.currentPage,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
         })
-        .then(res => {
+        .then((res) => {
           this.product = res.data.Product;
           this.total = res.data.total;
         })
-        .catch(err => {
+        .catch((err) => {
           return Promise.reject(err);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -275,4 +345,84 @@ export default {
   margin-left: 13.7px;
 }
 /* 主要内容区CSS END */
+.myList ul li {
+  z-index: 1;
+  float: left;
+  width: 234px;
+  height: 280px;
+  padding: 10px 0;
+  margin: 0 0 14.5px 13.7px;
+  background-color: white;
+  -webkit-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+  position: relative;
+}
+.myList ul li:hover {
+  z-index: 2;
+  -webkit-box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  -webkit-transform: translate3d(0, -2px, 0);
+  transform: translate3d(0, -2px, 0);
+}
+.myList ul li img {
+  display: block;
+  width: 160px;
+  height: 160px;
+  background: url(../assets/imgs/placeholder.png) no-repeat 50%;
+  margin: 0 auto;
+}
+.myList ul li h2 {
+  margin: 25px 10px 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.myList ul li h3 {
+  margin: 5px 10px;
+  height: 18px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #b0b0b0;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.myList ul li p {
+  margin: 10px 10px 10px;
+  text-align: center;
+  color: #ec9d8f;
+}
+.myList ul li p .del {
+  margin-left: 0.5em;
+  color: #b0b0b0;
+  text-decoration: line-through;
+}
+.myList #more {
+  text-align: center;
+  line-height: 280px;
+}
+.myList #more a {
+  font-size: 18px;
+  color: #333;
+}
+.myList #more a:hover {
+  color: #ec9d8f;
+}
+.myList ul li .delete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+}
+.myList ul li:hover .delete {
+  display: block;
+}
+.myList ul li .delete:hover {
+  color: #ec9d8f;
+}
 </style>

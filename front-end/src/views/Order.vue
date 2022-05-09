@@ -93,20 +93,35 @@ export default {
   },
   activated() {
     // 获取订单数据
-    this.$axios
-      .post("/api/user/order/getOrder", {
-        user_id: this.$store.state.user_id
+         this.$axios({
+        method: "post",
+        url: "http://localhost:80/back-end/order.php?action=getUserOrders",
+        data: {
+           user_id: this.$store.state.user_id
+        },
+        transformRequest: [
+          function(data) {
+            // 将{username:111,password:111} 转成 username=111&password=111
+            var ret = "";
+            for (var it in data) {
+              // 如果要发送中文 编码
+              ret +=
+                encodeURIComponent(it) +
+                "=" +
+                encodeURIComponent(data[it]) +
+                "&";
+            }
+            return ret.substring(0, ret.length - 1);
+          },
+        ],
       })
-      .then(res => {
-        if (res.data.code === "001") {
-          this.orders = res.data.orders;
-        } else {
-          this.notifyError(res.data.msg);
-        }
-      })
-      .catch(err => {
-        return Promise.reject(err);
-      });
+        .then((res) => {
+            this.notifySucceed("success!");
+            console.log(res.data)
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
   },
   watch: {
     // 通过订单信息，计算出每个订单的商品数量及总价
