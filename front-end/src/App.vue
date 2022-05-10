@@ -188,6 +188,9 @@
           <el-menu-item style="font-size:18px" index="/goods"
             >Products</el-menu-item
           >
+          <el-menu-item style="font-size:18px" index="/community"
+            >Community</el-menu-item
+          >
           <el-menu-item style="font-size:18px" index="/about"
             >About Us</el-menu-item
           >
@@ -249,6 +252,18 @@
                   <li>
                     <router-link :to="{ path: '/goods' }">
                       All products
+                    </router-link>
+                  </li>
+                </ul>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <h6>Categories</h6>
+                <ul class="footer-links">
+                  <li>
+                    <router-link :to="{ path: '/community' }">
+                      View community
                     </router-link>
                   </li>
                 </ul>
