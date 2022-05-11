@@ -107,7 +107,7 @@ export default {
         if (valid) {
           this.$axios({
             method: "post",
-            url: "http://localhost:80/back-end/user.php?action=userRegister",
+            url: "/api/back-end/user.php?action=userRegister",
             data: {
               username: this.RegisterUser.name,
               password: this.RegisterUser.pass,

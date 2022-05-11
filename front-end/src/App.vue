@@ -420,7 +420,7 @@ export default {
     logout() {
       this.$axios({
         method: "post",
-        url: "http://localhost:80/back-end/user.php?action=userLogout",
+        url: "/api/back-end/user.php?action=userLogout",
       })
         .then((res) => {
           this.visible = false;

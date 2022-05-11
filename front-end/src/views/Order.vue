@@ -112,7 +112,7 @@ export default {
     // 获取订单数据
     this.$axios({
       method: "post",
-      url: "http://localhost:80/back-end/order.php?action=getUserOrders",
+      url: "/api/back-end/order.php?action=getUserOrders",
       data: {
         user_id: this.$store.state.user_id,
       },

@@ -18,7 +18,11 @@ import Global from './Global';
 Vue.use(Global);
 
 import Axios from 'axios';
+Axios.defaults.withCredentials = true
+// 原来，浏览器发起跨域请求的时候，是不会主动带上cookie的，如果一个请求需要cookie，需要开发者设置一个选项
 Vue.prototype.$axios = Axios;
+Vue.config.productionTip = false
+
 // 全局请求拦截器
 Axios.interceptors.request.use(
   config => {
@@ -26,7 +30,9 @@ Axios.interceptors.request.use(
   },
   error => {
     // 跳转error页面
-    router.push({ path: "/error" });
+    router.push({
+      path: "/error"
+    });
     return Promise.reject(error);
   }
 );
@@ -43,13 +49,17 @@ Axios.interceptors.response.use(
     if (res.data.code === "500") {
       // 500表示服务器异常
       // 跳转error页面
-      router.push({ path: "/error" });
+      router.push({
+        path: "/error"
+      });
     }
     return res;
   },
   error => {
     // 跳转error页面
-    router.push({ path: "/error" });
+    router.push({
+      path: "/error"
+    });
     return Promise.reject(error);
   }
 );
@@ -79,7 +89,8 @@ router.beforeResolve((to, from, next) => {
 // 格式: 2020-02-25 21:43:23
 Vue.filter('dateFormat', (dataStr) => {
   var time = new Date(dataStr);
-  function timeAdd0 (str) {
+
+  function timeAdd0(str) {
     if (str < 10) {
       str = '0' + str;
     }

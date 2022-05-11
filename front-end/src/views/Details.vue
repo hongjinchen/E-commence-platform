@@ -114,7 +114,7 @@ export default {
     getDetails(val) {
       this.$axios({
         method: "post",
-        url: "http://localhost:80/back-end/product.php?action=getProductById",
+        url: "/api/back-end/product.php?action=getProductById",
         data: {
           product_id: val,
         },
@@ -155,7 +155,7 @@ export default {
 
       this.$axios({
         method: "post",
-        url: "http://localhost:80/back-end/shoppingChart.php?action=addChart",
+        url: "/api/back-end/shoppingChart.php?action=addChart",
         data: {
           user_id: this.$store.state.user_id,
           product_id: this.productID,
@@ -194,7 +194,7 @@ export default {
 console.log(this.$store.state.user_id)
       this.$axios({
         method: "post",
-        url: "http://localhost:80/back-end/collect.php?action=addCollect",
+        url: "/api/back-end/collect.php?action=addCollect",
         data: {
           user_id: this.$store.state.user_id,
           product_id: this.productID,

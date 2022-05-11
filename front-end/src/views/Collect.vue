@@ -41,7 +41,7 @@ export default {
     // 获取收藏数据
           this.$axios({
         method: "post",
-        url: "http://localhost:80/back-end/collect.php?action=getUserCollects",
+        url: "/api/back-end/collect.php?action=getUserCollects",
         data: {
           user_id:  this.$store.state.user_id
         },

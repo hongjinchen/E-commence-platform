@@ -66,7 +66,9 @@ export default {
     Login() {
       this.$axios({
         method: "post",
-        url: "http://localhost:80/back-end/user.php?action=userLogin",
+        // url: "http://localhost:80/back-end/user.php?action=userLogin",
+        url: "/api/back-end/user.php?action=userLogin",
+        
         data: {
           username: this.LoginUser.name,
           password: this.LoginUser.pass,

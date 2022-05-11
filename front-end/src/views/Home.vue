@@ -232,7 +232,8 @@ export default {
     getAllProducts() {
       this.$axios({
         method: "post",
-        url: "http://localhost:80/back-end/product.php?action=getAllProducts",
+        // url: "http://localhost:80/back-end/product.php?action=getAllProducts",
+         url: "/api/back-end/product.php?action=getAllProducts",
       })
         .then((res) => {
           this.AllProductList = res.data.products;
