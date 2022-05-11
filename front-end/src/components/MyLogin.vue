@@ -66,10 +66,17 @@ export default {
 
   methods: {
     ...mapActions(["setUser", "setShowLogin"]),
+
     Login() {
+      let fd = new FormData();
+      fd.append("username", this.LoginUser.name);
+      fd.append("password", this.LoginUser.pass);
+
+      let u = this.LoginUser.name === "admin" ? "/api/back-end/user.php?action=adminLogin" : "/api/back-end/user.php?action=userLogin";
+
       this.$axios({
         method: "post",
-        url: "/api/back-end/user.php?action=userLogin",
+        url: u,
         data: {
           username: this.LoginUser.name,
           password: this.LoginUser.pass,
@@ -146,6 +153,33 @@ export default {
         .then((res) => {
           if (res.data.message === "Operation Success") {
             //成功, 更新vuex购物车状态
+                      this.isLogin = false;
+
+          // 登录信息存到本地
+          if(this.LoginUser.name === "admin"){
+            this.$store.state.userName = this.LoginUser.name;
+            this.$store.state.userEmail= "1"
+            this.$store.state.user_id= "1"
+          }
+          else{
+            this.$store.state.userName = this.LoginUser.name;
+            this.$store.state.userEmail= res.data.login_user.userEmail
+            this.$store.state.user_id=res.data.login_user.user_id
+          }
+                    if(this.LoginUser.name === "admin"){
+            this.$router.push("/admin");
+                      // 改变登陆状态
+          this.$store.state.islogin = true;
+          let user_id = res.data.user_id;
+          localStorage.setItem("userName", this.LoginUser.name);
+          localStorage.setItem("user_id", user_id);
+          console.log(this.$store.state.userName);
+          console.log( this.$store.state.user_id);
+          // 登录信息存到vuex
+          this.setUser(this.LoginUser.name);
+          // 弹出通知框提示登录成功信息
+          this.notifySucceed("success!");
+          console.log(res.data);
             this.setShoppingCart(res.data.shoppingCartData);
             console.log("the chart info");
             console.log(res.data);
@@ -154,10 +188,12 @@ export default {
             // 提示失败信息
             this.notifyError(res.data.msg);
           }
+          }
         })
         .catch((err) => {
           return Promise.reject(err);
         });
+
     },
   },
 };
