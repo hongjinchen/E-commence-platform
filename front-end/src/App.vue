@@ -47,14 +47,16 @@
               </router-link>
             </li>
             <li>
-              <img  v-if="this.$store.state.islogin" 
+              <img
+                v-if="this.$store.state.islogin"
                 @click="openMyCenter = true"
                 style="height:30px;width:30px"
                 src="./assets/imgs/user.png"
               />
             </li>
             <li>
-              <img  v-if="this.$store.state.islogin" 
+              <img
+                v-if="this.$store.state.islogin"
                 @click="customerServes = true"
                 style="height:30px;width:30px"
                 src="./assets/imgs/bussiness-man.png"
@@ -408,17 +410,28 @@ export default {
     },
     // 退出登录
     logout() {
-      this.visible = false;
-      // 清空本地登录信息
-      this.$store.state.userName = "";
-      this.$store.state.userEmail = "";
-      this.$store.state.user_id = "";
-      this.$store.state.islogin = false;
-      localStorage.setItem("userName", "");
-      localStorage.setItem("user_id", "");
-      // 清空vuex登录信息
-      this.setUser("");
-      this.notifySucceed("成功退出登录");
+      this.$axios({
+        method: "post",
+        url: "http://localhost:80/back-end/user.php?action=userLogout",
+      })
+        .then((res) => {
+          this.visible = false;
+          // 清空本地登录信息
+          this.$store.state.userName = "";
+          this.$store.state.userEmail = "";
+          this.$store.state.user_id = "";
+          this.$store.state.islogin = false;
+          localStorage.setItem("userName", "");
+          localStorage.setItem("user_id", "");
+          // 清空vuex登录信息
+          this.setUser("");
+          this.notifySucceed("Log out successfully");
+
+          console.log(res);
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
     },
     // 接收注册子组件传过来的数据
     isRegister(val) {

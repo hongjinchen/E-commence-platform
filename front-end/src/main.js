@@ -8,6 +8,9 @@ import store from './store'
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import VueCookies from 'vue-cookies'
+
+Vue.use(VueCookies)
 Vue.use(ElementUI);
 
 // 全局函数及变量

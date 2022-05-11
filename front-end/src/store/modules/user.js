@@ -7,6 +7,7 @@ export default {
     islogin:false,
     user_id:"",
     userEmail:"",
+
     showLogin: false // 用于控制是否显示登录组件
   },
   getters: {

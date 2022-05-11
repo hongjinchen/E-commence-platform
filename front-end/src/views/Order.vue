@@ -11,7 +11,10 @@
     <div class="order-header">
       <div class="order-header-content">
         <p>
-          <i class="el-icon-s-order" style="font-size: 30px;color: #ec9d8f;"></i>
+          <i
+            class="el-icon-s-order"
+            style="font-size: 30px;color: #ec9d8f;"
+          ></i>
           My order
         </p>
       </div>
@@ -19,17 +22,19 @@
     <!-- 我的订单头部END -->
 
     <!-- 我的订单主要内容 -->
-    <div class="order-content" v-if="orders.length>0">
-      <div class="content" v-for="(item,index) in orders" :key="index">
+    <div class="order-content" v-if="orders.length > 0">
+      <div class="content" v-for="(item, index) in orders" :key="index">
         <ul>
           <!-- 我的订单表头 -->
           <li class="order-info">
-            <div class="order-id">Order No:{{item[0].order_id}}</div>
-            <div class="order-time">Order Time:{{item[0].order_time | dateFormat}}</div>
+            <div class="order-id">Order No:{{ item[0].order_id }}</div>
+            <div class="order-time">
+              Order Time:{{ item[0].order_time | dateFormat }}
+            </div>
           </li>
           <li class="header">
             <div class="pro-img"></div>
-            <div class="pro-name">Type of plant </div>
+            <div class="pro-name">Type of plant</div>
             <div class="pro-price">Price</div>
             <div class="pro-num">Number</div>
             <div class="pro-total">Subtotal</div>
@@ -37,33 +42,45 @@
           <!-- 我的订单表头END -->
 
           <!-- 订单列表 -->
-          <li class="product-list" v-for="(product,i) in item" :key="i">
+          <li class="product-list" v-for="(product, i) in item" :key="i">
             <div class="pro-img">
-              <router-link :to="{ path: '/goods/details', query: {productID:product.product_id} }">
+              <router-link
+                :to="{
+                  path: '/goods/details',
+                  query: { productID: product.product_id },
+                }"
+              >
                 <img :src="$target + product.product_picture" />
               </router-link>
             </div>
             <div class="pro-name">
               <router-link
-                :to="{ path: '/goods/details', query: {productID:product.product_id} }"
-              >{{product.product_name}}</router-link>
+                :to="{
+                  path: '/goods/details',
+                  query: { productID: product.product_id },
+                }"
+                >{{ product.product_name }}</router-link
+              >
             </div>
-            <div class="pro-price">{{product.product_price}}RMB</div>
-            <div class="pro-num">{{product.product_num}}</div>
-            <div class="pro-total pro-total-in">{{product.product_price*product.product_num}}RMB</div>
+            <div class="pro-price">{{ product.product_price }}RMB</div>
+            <div class="pro-num">{{ product.product_num }}</div>
+            <div class="pro-total pro-total-in">
+              {{ product.product_price * product.product_num }}RMB
+            </div>
           </li>
         </ul>
         <div class="order-bar">
           <div class="order-bar-left">
             <span class="order-total">
-              Total 
-              <span class="order-total-num">{{total[index].totalNum}}</span>  Item
+              Total
+              <span class="order-total-num">{{ total[index].totalNum }}</span>
+              Item
             </span>
           </div>
           <div class="order-bar-right">
             <span>
               <span class="total-price-title">Cart subtotal: </span>
-              <span class="total-price">{{total[index].totalPrice}}RMB</span>
+              <span class="total-price">{{ total[index].totalPrice }}RMB</span>
             </span>
           </div>
           <!-- 订单列表END -->
@@ -88,40 +105,38 @@ export default {
   data() {
     return {
       orders: [], // 订单列表
-      total: [] // 每个订单的商品数量及总价列表
+      total: [], // 每个订单的商品数量及总价列表
     };
   },
   activated() {
     // 获取订单数据
-         this.$axios({
-        method: "post",
-        url: "http://localhost:80/back-end/order.php?action=getUserOrders",
-        data: {
-           user_id: this.$store.state.user_id
+    this.$axios({
+      method: "post",
+      url: "http://localhost:80/back-end/order.php?action=getUserOrders",
+      data: {
+        user_id: this.$store.state.user_id,
+      },
+      transformRequest: [
+        function(data) {
+          // 将{username:111,password:111} 转成 username=111&password=111
+          var ret = "";
+          for (var it in data) {
+            // 如果要发送中文 编码
+            ret +=
+              encodeURIComponent(it) + "=" + encodeURIComponent(data[it]) + "&";
+          }
+          return ret.substring(0, ret.length - 1);
         },
-        transformRequest: [
-          function(data) {
-            // 将{username:111,password:111} 转成 username=111&password=111
-            var ret = "";
-            for (var it in data) {
-              // 如果要发送中文 编码
-              ret +=
-                encodeURIComponent(it) +
-                "=" +
-                encodeURIComponent(data[it]) +
-                "&";
-            }
-            return ret.substring(0, ret.length - 1);
-          },
-        ],
+      ],
+    })
+      .then((res) => {
+        this.notifySucceed("success!");
+        this.orders=res.data
+        // console.log(res)
       })
-        .then((res) => {
-            this.notifySucceed("success!");
-            console.log(res.data)
-        })
-        .catch((err) => {
-          return Promise.reject(err);
-        });
+      .catch((err) => {
+        return Promise.reject(err);
+      });
   },
   watch: {
     // 通过订单信息，计算出每个订单的商品数量及总价
@@ -140,8 +155,8 @@ export default {
         total.push({ totalNum, totalPrice });
       }
       this.total = total;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
