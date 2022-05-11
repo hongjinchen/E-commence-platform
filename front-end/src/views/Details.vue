@@ -105,11 +105,15 @@ export default {
     // 监听商品id的变化，请求后端获取商品数据
     productID: function(val) {
       this.getDetails(val);
-      this.getDetailsPicture(val);
     },
   },
   methods: {
-    ...mapActions(["unshiftShoppingCart", "addShoppingCartNum","setUser", "setShowLogin"]),
+    ...mapActions([
+      "unshiftShoppingCart",
+      "addShoppingCartNum",
+      "setUser",
+      "setShowLogin",
+    ]),
     // 获取商品详细信息
     getDetails(val) {
       this.$axios({
@@ -191,7 +195,7 @@ export default {
         this.$store.dispatch("setShowLogin", true);
         return;
       }
-console.log(this.$store.state.user_id)
+      console.log(this.$store.state.user_id);
       this.$axios({
         method: "post",
         url: "/api/back-end/collect.php?action=addCollect",
@@ -216,7 +220,7 @@ console.log(this.$store.state.user_id)
         ],
       })
         .then((res) => {
-            this.notifySucceed(res.data.msg);
+          this.notifySucceed(res.data.msg);
         })
         .catch((err) => {
           return Promise.reject(err);

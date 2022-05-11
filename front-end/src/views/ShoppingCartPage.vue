@@ -1,7 +1,3 @@
-<!--
- * @Description: 我的购物车页面组件
- -->
-
 <template>
   <div class="shoppingCart">
     <!-- 购物车头部 -->
@@ -141,20 +137,29 @@
     <!-- 购物车为空的时候显示的内容END -->
   </div>
 </template>
-<script>
-// import { mapActions } from "vuex";
-// import { mapGetters } from "vuex";
 
+<script>
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
-    return { shoppingCart: [] };
+    return {
+      userCharts: [],
+      shoppingCart: [],
+      shoppingCartDetail: [],
+    };
   },
   created() {
     this.getUserChart();
+    this.getUserChartDetail();
   },
   methods: {
-    // ...mapActions(["updateShoppingCart", "deleteShoppingCart", "checkAll"]),
-
+    ...mapActions([
+      "updateShoppingCart",
+      "deleteShoppingCart",
+      "checkAll",
+      "setShoppingCart",
+    ]),
     // 修改商品数量的时候调用该函数
     handleChange(currentValue, key, productID) {
       // 当修改数量时，默认勾选
@@ -204,8 +209,42 @@ export default {
           return Promise.reject(err);
         });
     },
+    getDetails(val) {
+      this.$axios({
+        method: "post",
+        url: "/api/back-end/product.php?action=getProductById",
+        data: {
+          product_id: val,
+        },
+        transformRequest: [
+          function(data) {
+            // 将{username:111,password:111} 转成 username=111&password=111
+            var ret = "";
+            for (var it in data) {
+              // 如果要发送中文 编码
+              ret +=
+                encodeURIComponent(it) +
+                "=" +
+                encodeURIComponent(data[it]) +
+                "&";
+            }
+            return ret.substring(0, ret.length - 1);
+          },
+        ],
+      })
+        .then((res) => {
+          this.shoppingCartDetail.push(res.data.product_info);
+          console.log(this.shoppingCartDetail);
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+    },
+    checkChange(val, key) {
+      // 更新vuex中购物车商品是否勾选的状态
+      this.updateShoppingCart({ key: key, prop: "check", val: val });
+    },
     getUserChart() {
-      // 用户已经登录,获取该用户的购物车信息
       this.$axios({
         method: "post",
         url: "/api/back-end/shoppingChart.php?action=getUserCharts",
@@ -229,71 +268,76 @@ export default {
         ],
       })
         .then((res) => {
-          if (res.data.message === "Operation Success") {
-            this.shoppingCart = res.data.shoppingCartData;
-            console.log( res.data.shoppingCartData )
-          } else {
-            // 提示失败信息
-            this.notifyError(res.data.msg);
-          }
+          this.userCharts = res.data.charts;
         })
         .catch((err) => {
           return Promise.reject(err);
         });
     },
-    checkChange(val, key) {
-      // 更新vuex中购物车商品是否勾选的状态
-      this.updateShoppingCart({ key: key, prop: "check", val: val });
-    },
-    // 向后端发起删除购物车的数据库信息请求
-    deleteItem(e, id, productID) {
-      this.$axios({
-        method: "post",
-        url: "/api/user/shoppingCart/deleteShoppingCart",
-        data: {
-          product_id: productID,
-        },
-        transformRequest: [
-          function(data) {
-            // 将{username:111,password:111} 转成 username=111&password=111
-            var ret = "";
-            for (var it in data) {
-              // 如果要发送中文 编码
-              ret +=
-                encodeURIComponent(it) +
-                "=" +
-                encodeURIComponent(data[it]) +
-                "&";
-            }
-            return ret.substring(0, ret.length - 1);
+    async getUserChartDetail() {
+      // 用户已经登录,获取该用户的购物车信息
+      //   await
+      for (let i = 0; i < this.userCharts.length; i++) {
+        let productInfo = [];
+        await this.$axios({
+          method: "post",
+          url: "/api/back-end/product.php?action=getProductById",
+          data: {
+            product_id: this.userCharts[i].product_id,
           },
-        ],
-      })
-        .then((res) => {
-          switch (res.data.message) {
-            case "Operation Success":
-              // 更新vuex状态
-              this.deleteShoppingCart(id);
-              // 提示删除成功信息
-              this.notifySucceed(res.data.msg);
-              break;
-            default:
-              // 提示删除失败信息
-              this.notifyError(res.data.msg);
-          }
+          transformRequest: [
+            function(data) {
+              // 将{username:111,password:111} 转成 username=111&password=111
+              var ret = "";
+              for (var it in data) {
+                // 如果要发送中文 编码
+                ret +=
+                  encodeURIComponent(it) +
+                  "=" +
+                  encodeURIComponent(data[it]) +
+                  "&";
+              }
+              return ret.substring(0, ret.length - 1);
+            },
+          ],
         })
-        .catch((err) => {
-          return Promise.reject(err);
-        });
+          .then((res) => {
+            productInfo = res.data.product_info;
+            console.log(this.userCharts);
+            let newItem = {
+              id: this.userCharts[i].id,
+              productID: this.userCharts[i].product_id,
+              productName: productInfo.product_name,
+              productImg: productInfo.product_picture,
+              price: productInfo.product_price,
+              num: this.userCharts[i].num,
+              maxNum: productInfo.product_num,
+              check: false,
+            };
+            this.shoppingCart.push(newItem);
+            console.log(this.shoppingCart);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+
+      if (this.shoppingCart.length > 0) {
+        this.setShoppingCart(this.shoppingCart);
+        console.log("the value of setShoppingCart");
+        console.log(this.getShoppingCart);
+        console.log(this.getCheckNum);
+        console.log(this.getTotalPrice);
+      }
     },
   },
   computed: {
-    // ...mapGetters([
-    //   "getShoppingCart",
-    //   "getCheckNum",
-    //   "getTotalPrice",
-    //   "getNum",
-    // ]),
+    ...mapGetters([
+      "getShoppingCart",
+      "getCheckNum",
+      "getTotalPrice",
+      "getNum",
+    ]),
     isAllCheck: {
       get() {
         return this.$store.getters.getIsAllCheck;

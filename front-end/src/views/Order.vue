@@ -110,6 +110,7 @@ export default {
   },
   activated() {
     // 获取订单数据
+
     this.$axios({
       method: "post",
       url: "/api/back-end/order.php?action=getUserOrders",
@@ -131,8 +132,9 @@ export default {
     })
       .then((res) => {
         this.notifySucceed("success!");
-        this.orders=res.data
-        // console.log(res)
+        this.orders = res.data;
+        console.log("success");
+        console.log(res.data);
       })
       .catch((err) => {
         return Promise.reject(err);

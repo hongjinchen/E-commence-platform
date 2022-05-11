@@ -40,10 +40,9 @@
               <router-link to="/collect">My wishlist</router-link>
             </li>
             <li :class="getNum > 0 ? 'shopCart-full' : 'shopCart'">
-              <router-link to="/shoppingCart">
+              <router-link to="/ShoppingCartPage">
                 <i style="color:#fff"></i>
                 Flower Basket
-                <span class="num">({{ getNum }})</span>
               </router-link>
             </li>
             <li>
@@ -184,9 +183,9 @@
             </router-link>
           </div>
           <el-menu-item style="font-size:18px" index="/">Home</el-menu-item>
-          <el-menu-item style="font-size:18px" index="/forum"
+          <!-- <el-menu-item style="font-size:18px" index="/forum"
             >Forum</el-menu-item
-          >
+          > -->
           <el-menu-item style="font-size:18px" index="/goods"
             >Products</el-menu-item
           >
@@ -335,25 +334,26 @@ export default {
     return {
       user: {
         name: "user",
-        email: "12345678901",
+        email: "12345678901@student.xjtlu.edu.cn",
+        telephone: "12345678901",
         order: [
           {
             receiver: "11",
-            phoneNumber: "11111111111",
+            phoneNumber: "0512-88161000",
             address:
-              "当我们想从List集合中移除某些元素的时候一般会想到List集合中的remove方法",
+              "No. 111 Renai Road, Suzhou, Jiangsu Province, West University of Liverpool",
           },
           {
             receiver: "22",
-            phoneNumber: "22222222222",
+            phoneNumber: "0512-88161000",
             address:
-              "当我们想从List集合中移除某些元素的时候一般会想到List集合中的remove方法",
+              "No. 111 Renai Road, Suzhou, Jiangsu Province, West University of Liverpool",
           },
           {
             receiver: "33",
-            phoneNumber: "33333333333",
+            phoneNumber: "0512-88161000",
             address:
-              "当我们想从List集合中移除某些元素的时候一般会想到List集合中的remove方法",
+              "No. 111 Renai Road, Suzhou, Jiangsu Province, West University of Liverpool",
           },
         ],
       },
@@ -383,33 +383,7 @@ export default {
   computed: {
     ...mapGetters(["getUser", "getNum"]),
   },
-  watch: {
-    // 获取vuex的登录状态
-    getUser: function(val) {
-      if (val === "") {
-        // 用户没有登录
-        this.setShoppingCart([]);
-      } else {
-        // 用户已经登录,获取该用户的购物车信息
-        this.$axios
-          .post("/api/user/shoppingCart/getShoppingCart", {
-            user_id: val.user_id,
-          })
-          .then((res) => {
-            if (res.data.code === "001") {
-              // 001 为成功, 更新vuex购物车状态
-              this.setShoppingCart(res.data.shoppingCartData);
-            } else {
-              // 提示失败信息
-              this.notifyError(res.data.msg);
-            }
-          })
-          .catch((err) => {
-            return Promise.reject(err);
-          });
-      }
-    },
-  },
+  watch: {},
   methods: {
     ...mapActions(["setUser", "setShowLogin", "setShoppingCart"]),
     login() {
