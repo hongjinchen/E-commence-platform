@@ -63,54 +63,71 @@ export default {
 
   methods: {
     ...mapActions(["setUser", "setShowLogin"]),
+
     Login() {
+      let fd = new FormData();
+      fd.append("username", this.LoginUser.name);
+      fd.append("password", this.LoginUser.pass);
+
+      let u = this.LoginUser.name === "admin" ? "/api/back-end/user.php?action=adminLogin" : "/api/back-end/user.php?action=userLogin";
+
       this.$axios({
         method: "post",
         // url: "http://localhost:80/back-end/user.php?action=userLogin",
-        url: "/api/back-end/user.php?action=userLogin",
+        url: u,
         
-        data: {
-          username: this.LoginUser.name,
-          password: this.LoginUser.pass,
-        },
-        transformRequest: [
-          function(data) {
-            // 将{username:111,password:111} 转成 username=111&password=111
-            var ret = "";
-            for (var it in data) {
-              // 如果要发送中文 编码
-              ret +=
-                encodeURIComponent(it) +
-                "=" +
-                encodeURIComponent(data[it]) +
-                "&";
-            }
-            return ret.substring(0, ret.length - 1);
-          },
-        ],
+        data: fd,
+        // transformRequest: [
+        //   function(data) {
+        //     // 将{username:111,password:111} 转成 username=111&password=111
+        //     var ret = "";
+        //     for (var it in data) {
+        //       // 如果要发送中文 编码
+        //       ret +=
+        //         encodeURIComponent(it) +
+        //         "=" +
+        //         encodeURIComponent(data[it]) +
+        //         "&";
+        //     }
+        //     return ret.substring(0, ret.length - 1);
+        //   },
+        // ],
       })
         .then((res) => {
-            this.isLogin = false;
-            // 登录信息存到本地
+          this.isLogin = false;
+          // 登录信息存到本地
+          if(this.LoginUser.name === "admin"){
+            this.$store.state.userName = this.LoginUser.name;
+            this.$store.state.userEmail= "1"
+            this.$store.state.user_id= "1"
+          }
+          else{
             this.$store.state.userName = this.LoginUser.name;
             this.$store.state.userEmail= res.data.login_user.userEmail
             this.$store.state.user_id=res.data.login_user.user_id
-            // 改变登陆状态
-            this.$store.state.islogin = true;
-            let user_id = res.data.user_id;
-            localStorage.setItem("userName", this.LoginUser.name);
-            localStorage.setItem("user_id", user_id);
-            console.log(this.$store.state.userName);
-            console.log( this.$store.state.user_id);
-            // 登录信息存到vuex
-            this.setUser(this.LoginUser.name);
-            // 弹出通知框提示登录成功信息
-            this.notifySucceed("success!");
-            console.log(res.data)
+          }
+
+          // 改变登陆状态
+          this.$store.state.islogin = true;
+          let user_id = res.data.user_id;
+          localStorage.setItem("userName", this.LoginUser.name);
+          localStorage.setItem("user_id", user_id);
+          console.log(this.$store.state.userName);
+          console.log( this.$store.state.user_id);
+          // 登录信息存到vuex
+          this.setUser(this.LoginUser.name);
+          // 弹出通知框提示登录成功信息
+          this.notifySucceed("success!");
+          console.log(res.data);
+
+          if(this.LoginUser.name === "admin"){
+            this.$router.push("/admin");
+          }
         })
         .catch((err) => {
           return Promise.reject(err);
         });
+
     },
   },
 };

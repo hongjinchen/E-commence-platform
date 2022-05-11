@@ -79,6 +79,11 @@ const routes = [
     name: 'Forum',
     component: () => import('../views/Forum.vue')
   },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('../views/MyAdmin.vue')
+  },
 ]
 
 const router = new Router({
