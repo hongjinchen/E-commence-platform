@@ -51,7 +51,6 @@
                   <i
                     class="el-icon-close delete"
                     slot="reference"
-                    v-show="isDelete"
                   ></i>
                 </el-popover>
                 <router-link
@@ -71,14 +70,6 @@
                       >{{ item.product_price }}RMB</span
                     >
                   </p>
-                </router-link>
-              </li>
-              <li v-show="isMore && list.length >= 1" id="more">
-                <router-link
-                  :to="{ path: '/goods', query: { categoryID: categoryID } }"
-                >
-                  Browse more...
-                  <i class="el-icon-d-arrow-right"></i>
                 </router-link>
               </li>
             </ul>
@@ -222,7 +213,7 @@ export default {
     getCategory() {
       this.$axios({
         method: "post",
-        url: "http://localhost:80/back-end/category.php?action=getCategories",
+        url: "/api/back-end/category.php?action=getCategories",
       })
         .then((res) => {
           for (let i = 0; i < res.data.categories.length; i++) {
@@ -244,7 +235,7 @@ export default {
       this.FlowerCutList = [];
       this.$axios({
         method: "post",
-        url: "http://localhost:80/back-end/product.php?action=getAllProducts",
+        url: "/api/back-end/product.php?action=getAllProducts",
       })
         .then((res) => {
           // this.productList = res.data.products;

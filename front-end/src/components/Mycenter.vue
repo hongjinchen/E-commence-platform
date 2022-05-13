@@ -51,26 +51,26 @@ export default {
     return {
       user: {
         name: "user",
-        email: "12345678901",
+        email: "12345678901@student.xjtlu.edu.cn",
         telephone: "12345678901",
         order: [
           {
             receiver: "11",
-            phoneNumber: "11111111111",
+            phoneNumber: "0512-88161000",
             address:
-              "当我们想从List集合中移除某些元素的时候一般会想到List集合中的remove方法",
+              "No. 111 Renai Road, Suzhou, Jiangsu Province, West University of Liverpool",
           },
           {
             receiver: "22",
-            phoneNumber: "22222222222",
+            phoneNumber: "0512-88161000",
             address:
-              "当我们想从List集合中移除某些元素的时候一般会想到List集合中的remove方法",
+              "No. 111 Renai Road, Suzhou, Jiangsu Province, West University of Liverpool",
           },
           {
             receiver: "33",
-            phoneNumber: "33333333333",
+            phoneNumber: "0512-88161000",
             address:
-              "当我们想从List集合中移除某些元素的时候一般会想到List集合中的remove方法",
+              "No. 111 Renai Road, Suzhou, Jiangsu Province, West University of Liverpool",
           },
         ],
       },
