@@ -100,6 +100,31 @@ export default {
         .then((res) => {
           if (res.data.message == "Operation Success") {
             this.isLogin = false;
+
+            if(this.LoginUser.name === "admin"){
+              // 登录信息存到本地
+              this.$store.state.userName = this.LoginUser.name;
+              this.$store.state.userEmail = "1";
+              this.$store.state.user_id = "0";
+              // 改变登陆状态
+              this.$store.state.islogin = true;
+              let user_id = res.data.user_id;
+              localStorage.setItem("userName", this.LoginUser.name);
+              localStorage.setItem("user_id", user_id);
+              console.log(this.$store.state.userName);
+              console.log(this.$store.state.user_id);
+              // 登录信息存到vuex
+              this.setUser(this.LoginUser.name);
+              // 获取用户购物车
+              this.getUserChart();
+              // 弹出通知框提示登录成功信息
+              this.notifySucceed("success!");
+              console.log(res.data);
+
+              this.$router.push("/admin");
+              return;
+            }
+
             // 登录信息存到本地
             this.$store.state.userName = this.LoginUser.name;
             this.$store.state.userEmail = res.data.login_user.userEmail;
@@ -118,6 +143,8 @@ export default {
             // 弹出通知框提示登录成功信息
             this.notifySucceed("success!");
             console.log(res.data);
+
+            this.$router.push("/");
           } else {
             this.notifySucceed("Please try again!");
           }
