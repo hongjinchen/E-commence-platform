@@ -66,7 +66,8 @@
           <el-button class="shop-cart" :disabled="dis" @click="addShoppingCart"
             >Add to cart</el-button
           >
-          <el-button class="like" @click="addCollect">Wishlist</el-button>
+          <el-button class="shop-cart" @click="addCollect">Wishlist</el-button>
+          <el-button class="shop-cart" @click="purchaseGoods">Purchase</el-button>
         </div>
         <!-- 内容区底部按钮END -->
         <div class="pro-policy">
@@ -114,7 +115,39 @@ export default {
       "setUser",
       "setShowLogin",
     ]),
-    // 获取商品详细信息
+    // 获取商品详细信息'
+    purchaseGoods(val) {
+            this.$axios({
+        method: "post",
+        url: "/api/back-end/product.php?action=getProductById",
+        data: {
+          product_id: val,
+        },
+        transformRequest: [
+          function(data) {
+            // 将{username:111,password:111} 转成 username=111&password=111
+            var ret = "";
+            for (var it in data) {
+              // 如果要发送中文 编码
+              ret +=
+                encodeURIComponent(it) +
+                "=" +
+                encodeURIComponent(data[it]) +
+                "&";
+            }
+            return ret.substring(0, ret.length - 1);
+          },
+        ],
+      })
+        .then((res) => {
+          console.log(res.data);
+          this.productDetails = res.data.product_info;
+          this.productPicture = res.data.product_info.product_picture;
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+    },
     getDetails(val) {
       this.$axios({
         method: "post",
@@ -142,7 +175,6 @@ export default {
           console.log(res.data);
           this.productDetails = res.data.product_info;
           this.productPicture = res.data.product_info.product_picture;
-          alert("!");
         })
         .catch((err) => {
           return Promise.reject(err);
@@ -352,7 +384,9 @@ export default {
   text-align: center;
 }
 #details .main .content .button .shop-cart {
-  width: 340px;
+  width: 150px;
+  margin-left:30px;
+  margin-right: 30px;
   background-color: #ec9d8f;
 }
 #details .main .content .button .shop-cart:hover {
@@ -360,7 +394,7 @@ export default {
 }
 
 #details .main .content .button .like {
-  width: 260px;
+  width: 150px;
   margin-left: 40px;
   background-color: #b0b0b0;
 }

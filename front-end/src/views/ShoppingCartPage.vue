@@ -16,31 +16,21 @@
       <ul>
         <!-- 购物车表头 -->
         <li class="header">
-          <div class="pro-check">
+          <!-- <div class="pro-check">
             <el-checkbox v-model="isAllCheck">Choose all</el-checkbox>
-          </div>
+          </div> -->
           <div class="pro-img"></div>
-          <div class="pro-name">Plant product type</div>
+          <div class="name">Plant product type</div>
           <div class="pro-price">Price</div>
           <div class="pro-num">Size</div>
           <div class="pro-total">Subtotal</div>
-          <div class="pro-action">Delet</div>
+          <div class="pro-action">Delete</div>
         </li>
         <!-- 购物车表头END -->
 
         <!-- 购物车列表 -->
-        <li
-          class="product-list"
-          v-for="(item, index) in shoppingCart"
-          :key="item.id"
-        >
-          <!-- {{item}} -->
-          <div class="pro-check">
-            <el-checkbox
-              :value="item.check"
-              @change="checkChange($event, index)"
-            ></el-checkbox>
-          </div>
+        <li class="product-list" v-for="item in shoppingCart" :key="item.id">
+          <div class="pro-check"></div>
           <div class="pro-img">
             <router-link
               :to="{
@@ -48,7 +38,7 @@
                 query: { productID: item.productID },
               }"
             >
-              <img :src="$target + item.productImg" />
+              <img :src="item.productImg" />
             </router-link>
           </div>
           <div class="pro-name">
@@ -64,24 +54,22 @@
           <div class="pro-num">
             <el-input-number
               size="small"
-              :value="item.num"
-              @change="handleChange($event, index, item.productID)"
+              v-model="item.num"
               :min="1"
-              :max="item.maxNum"
             ></el-input-number>
           </div>
           <div class="pro-total pro-total-in">
-            {{ item.price * item.num }}元
+            {{ item.price * item.num }}RMB
           </div>
           <div class="pro-action">
             <el-popover placement="right">
-              <p>确定删除吗？</p>
+              <p>Are you sure?</p>
               <div style="text-align: right; margin: 10px 0 0">
                 <el-button
                   type="primary"
                   size="mini"
-                  @click="deleteItem($event, item.id, item.productID)"
-                  >确定</el-button
+                  @click="deleteItem(item.id, item.productID)"
+                  >Continue</el-button
                 >
               </div>
               <i
@@ -91,6 +79,13 @@
               ></i>
             </el-popover>
           </div>
+          <div>
+            <el-button
+              @click="purchaseGood(item.productID, item.num, item.price)"
+            >
+              Purchase
+            </el-button>
+          </div>
         </li>
         <!-- 购物车列表END -->
       </ul>
@@ -98,29 +93,9 @@
       <!-- 购物车底部导航条 -->
       <div class="cart-bar">
         <div class="cart-bar-left">
-          <span>
-            <router-link to="/goods">Continuing shopping</router-link>
-          </span>
-          <span class="sep">|</span>
-          <span class="cart-total">
-            There are
-            <span class="cart-total-num">{{ getNum }}</span> items in cart, you
-            have choosed
-            <span class="cart-total-num">{{ getCheckNum }}</span> items
-          </span>
-        </div>
-        <div class="cart-bar-right">
-          <span>
-            <span class="total-price-title">Cart subtotal:</span>
-            <span class="total-price">{{ getTotalPrice }}RMB</span>
-          </span>
-          <router-link :to="getCheckNum > 0 ? '/confirmOrder' : ''">
-            <div
-              :class="getCheckNum > 0 ? 'btn-primary' : 'btn-primary-disabled'"
-            >
-              proceed to checkout
-            </div>
-          </router-link>
+          <router-link to="/goods">
+            <el-button>Continuing shopping </el-button></router-link
+          >
         </div>
       </div>
       <!-- 购物车底部导航条END -->
@@ -150,7 +125,9 @@ export default {
     };
   },
   created() {
-    this.getUserChart();
+    this.getUserChartDetail();
+  },
+  activated() {
     this.getUserChartDetail();
   },
   methods: {
@@ -162,12 +139,10 @@ export default {
     ]),
     // 修改商品数量的时候调用该函数
     handleChange(currentValue, key, productID) {
-      // 当修改数量时，默认勾选
-      this.updateShoppingCart({ key: key, prop: "check", val: true });
       // 向后端发起获取购物车的数据库信息请求
       this.$axios({
         method: "post",
-        url: "/api/shoppingChart.php?action=getUserCharts",
+        url: "/api/back-end/shoppingChart.php?action=getUserCharts",
         data: {
           product_id: productID,
           num: currentValue,
@@ -189,20 +164,9 @@ export default {
         ],
       })
         .then((res) => {
-          switch (res.data.message) {
-            case "Operation Success":
-              // 更新vuex状态
-              this.updateShoppingCart({
-                key: key,
-                prop: "num",
-                val: currentValue,
-              });
-              // 提示更新成功信息
-              this.notifySucceed(res.data.msg);
-              break;
-            default:
-              // 提示更新失败信息
-              this.notifyError(res.data.msg);
+          if (res.data.message == "Operation Success") {
+            this.notifySucceed("Item quantity changed successfully");
+            this.$router.go(0);
           }
         })
         .catch((err) => {
@@ -240,11 +204,8 @@ export default {
           return Promise.reject(err);
         });
     },
-    checkChange(val, key) {
-      // 更新vuex中购物车商品是否勾选的状态
-      this.updateShoppingCart({ key: key, prop: "check", val: val });
-    },
-    getUserChart() {
+    getUserChartDetail() {
+      // 用户已经登录,获取该用户的购物车信息
       this.$axios({
         method: "post",
         url: "/api/back-end/shoppingChart.php?action=getUserCharts",
@@ -268,18 +229,18 @@ export default {
         ],
       })
         .then((res) => {
+          this.userCharts = [];
+          this.shoppingCart = [];
+          this.shoppingCartDetail = [];
           this.userCharts = res.data.charts;
         })
         .catch((err) => {
           return Promise.reject(err);
         });
-    },
-    async getUserChartDetail() {
-      // 用户已经登录,获取该用户的购物车信息
-      //   await
+
       for (let i = 0; i < this.userCharts.length; i++) {
         let productInfo = [];
-        await this.$axios({
+        this.$axios({
           method: "post",
           url: "/api/back-end/product.php?action=getProductById",
           data: {
@@ -330,6 +291,80 @@ export default {
         console.log(this.getTotalPrice);
       }
     },
+    //  <el-button @click="purchaseGood(item.productID,item.num,item.price)">
+    purchaseGood(productID, num, price) {
+      let shipping_info = " ";
+      let payment_info = " ";
+      this.$axios({
+        method: "post",
+        url: "/api/back-end/order.php?action=createOrder",
+        data: {
+          user_id: this.$store.state.user_id,
+          product_id: productID,
+          product_num: num,
+          product_price: price,
+          shipping_info: shipping_info,
+          payment_info: payment_info,
+        },
+        transformRequest: [
+          function(data) {
+            // 将{username:111,password:111} 转成 username=111&password=111
+            var ret = "";
+            for (var it in data) {
+              // 如果要发送中文 编码
+              ret +=
+                encodeURIComponent(it) +
+                "=" +
+                encodeURIComponent(data[it]) +
+                "&";
+            }
+            return ret.substring(0, ret.length - 1);
+          },
+        ],
+      })
+        .then((res) => {
+          if (res.data.message == "Operation Success") {
+            this.notifySucceed("success!");
+          } else {
+            this.notifySucceed(res.data.message);
+          }
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+    },
+    deleteItem(id, productID) {
+      this.$axios({
+        method: "post",
+        url: "/api/back-end/shoppingChart.php?action=deleteChart",
+        data: {
+          id: productID,
+        },
+        transformRequest: [
+          function(data) {
+            // 将{username:111,password:111} 转成 username=111&password=111
+            var ret = "";
+            for (var it in data) {
+              // 如果要发送中文 编码
+              ret +=
+                encodeURIComponent(it) +
+                "=" +
+                encodeURIComponent(data[it]) +
+                "&";
+            }
+            return ret.substring(0, ret.length - 1);
+          },
+        ],
+      })
+        .then((res) => {
+          if (res.data.message == "Operation Success") {
+            this.notifySucceed("Item deleted successfully");
+          }
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+    },
   },
   computed: {
     ...mapGetters([
@@ -338,14 +373,6 @@ export default {
       "getTotalPrice",
       "getNum",
     ]),
-    isAllCheck: {
-      get() {
-        return this.$store.getters.getIsAllCheck;
-      },
-      set(val) {
-        this.checkAll(val);
-      },
-    },
   },
 };
 </script>
@@ -426,7 +453,11 @@ export default {
 }
 .shoppingCart .content ul .pro-name {
   float: left;
-  width: 380px;
+  width: 200px;
+}
+.shoppingCart .content ul .name {
+  float: left;
+  width: 310px;
 }
 .shoppingCart .content ul .pro-name a {
   color: #424242;
