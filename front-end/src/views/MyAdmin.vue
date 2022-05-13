@@ -2,70 +2,48 @@
   <div id="MyAdmin" style="max-width: 1225px; margin-left: auto; margin-right: auto">
 
     <el-card>
-      <h1>Admin</h1>
+      <el-row type="flex">
+        <el-col>
+          <h1>Admin</h1>
+        </el-col>
+        <el-col style="float: right; width: max-content">
+          <el-button type="primary" @click="key = Math.random()">Refresh</el-button>
+        </el-col>
+      </el-row>
+
+
     </el-card>
 
     <el-card style="margin-top: 16px">
       <el-tabs v-model="activeName">
 
 <!--Order Table-->
-        <el-tab-pane label="Orders" name="first">
-          <!--搜索与添加区域-->
-          <el-row :gutter="20" style="margin-bottom: 16px">
-            <el-col :span="20">
-              <el-input
-                placeholder="请输入内容"
-                clearable
-              >
-                <el-button
-                  slot="append"
-                  icon="el-icon-search"
-                ></el-button>
-              </el-input>
+        <el-tab-pane label="Order" name="first">
+          <el-row type="flex" style="margin-bottom: 16px">
+            <el-col>
+              <h2>Orders ({{Orders.length}})</h2>
             </el-col>
-            <el-col :span="4">
-              <el-button type="primary">添加用户</el-button>
-            </el-col>
+            <el-col style="width: max-content; float: right"></el-col>
           </el-row>
 
-          <!--用户列表区域-->
-          <el-table :data="Orders" border stripe>
-            <el-table-column type="index" label="#"></el-table-column>
-            <el-table-column label="ID" prop="username"></el-table-column>
-            <el-table-column label="邮箱" prop="email"></el-table-column>
-            <el-table-column label="电话" prop="mobile"></el-table-column>
-            <el-table-column label="角色" prop="role_name"></el-table-column>
-            <el-table-column label="状态">
-              <template>
-                <el-switch></el-switch>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" width="180px">
-              <template>
+          <el-table :data="Orders" :key="key" border stripe>
+            <el-table-column label="ID" prop="order_id" width="120px"></el-table-column>
+            <el-table-column label="Customer" prop="user_name" width="160px"></el-table-column>
+            <el-table-column label="Product" prop="product_name" width="160px"></el-table-column>
+            <el-table-column label="Shipping Info" prop="shipping_info"></el-table-column>
+            <el-table-column label="Price" prop="product_price" width="90px"></el-table-column>
+            <el-table-column label="Count" prop="product_num" width="90px"></el-table-column>
+            <el-table-column label="Payment" prop="payment_info" width="90px"></el-table-column>
+            <el-table-column label="Actions" width="90px">
+              <template slot-scope="scope">
                 <!-- 修改按钮 -->
                 <el-button
-                  type="primary"
+                  type="danger"
                   icon="el-icon-edit"
                   size="mini"
+                  style="float: right"
+                  @click="editOrderDialogShow(scope.row.order_id)"
                 ></el-button>
-                <!-- 删除按钮 -->
-                <el-button
-                  type="danger"
-                  icon="el-icon-delete"
-                  size="mini"
-                ></el-button>
-                <el-tooltip
-                  effect="dark"
-                  content="分配角色"
-                  placement="top-start"
-                  :enterable="false"
-                >
-                  <el-button
-                    type="warning"
-                    icon="el-icon-setting"
-                    size="mini"
-                  ></el-button>
-                </el-tooltip>
               </template>
             </el-table-column>
           </el-table>
@@ -73,18 +51,20 @@
 
 <!--Product Table-->
         <el-tab-pane label="Products" name="second">
-          <el-row :gutter="20" style="margin-bottom: 16px">
-            <el-col :span="20">
+          <el-row type="flex" style="margin-bottom: 16px">
+            <el-col>
               <h2>Products ({{Products.length}})</h2>
             </el-col>
-            <el-col :span="4">
+            <el-col style="width: max-content; float: right">
               <el-button type="primary" @click="addProductDialog=true">
                 Add a product</el-button>
             </el-col>
           </el-row>
+
           <el-table :data="Products" border stripe>
             <el-table-column label="ID" prop="product_id" width="80px"></el-table-column>
-            <el-table-column label="Title" prop="product_title" width="180px"></el-table-column>
+            <el-table-column label="Title" prop="product_title" width="120px"></el-table-column>
+            <el-table-column label="Category" prop="category_name" width="120px"></el-table-column>
             <el-table-column label="Name (show to customer)" prop="product_name"></el-table-column>
             <el-table-column label="Price" prop="product_price" width="100px"></el-table-column>
             <el-table-column label="Sell Price" prop="product_selling_price" width="100px"></el-table-column>
@@ -111,15 +91,16 @@
 
 <!--User Table-->
         <el-tab-pane label="Users" name="third">
-          <el-row :gutter="20" style="margin-bottom: 16px">
-            <el-col :span="20">
+          <el-row type="flex" style="margin-bottom: 16px">
+            <el-col>
               <h2>Users ({{Users.length}})</h2>
             </el-col>
-            <el-col :span="4">
+            <el-col style="width: max-content; float: right">
               <el-button type="primary" @click="addUserDialog=true">
                 Add a user</el-button>
             </el-col>
           </el-row>
+
           <el-table :data="Users" border stripe>
             <el-table-column label="ID" prop="user_id" width="80px"></el-table-column>
             <el-table-column label="Email" prop="userEmail"></el-table-column>
@@ -373,6 +354,77 @@
       </span>
     </el-dialog>
 
+    <el-dialog
+      title="Edit Order"
+      :visible.sync="editOrderDialog"
+      width="50%"
+    >
+      <!--主体区域-->
+      <el-form
+        :model="editOrderForm"
+        label-width="100px"
+      >
+
+        <el-row type="flex">
+          <el-col>
+            <el-form-item label="ID" prop="order_id">
+              <el-input v-model="editOrderForm.order_id" readonly></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="Time" prop="order_time">
+              <el-input v-model="editOrderForm.order_time" readonly></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-form-item label="Customer" prop="user_name">
+          <el-input v-model="editOrderForm.user_name" readonly></el-input>
+        </el-form-item>
+
+        <el-divider direction="horizontal" content-position="center"/>
+
+        <el-form-item label="Product" prop="product_name">
+          <el-input v-model="editOrderForm.product_name" readonly></el-input>
+        </el-form-item>
+
+        <el-row type="flex">
+          <el-col>
+            <el-form-item label="Count" prop="product_num">
+              <el-input v-model="editOrderForm.product_num"
+                        oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="Single Price" prop="product_price">
+              <el-input v-model="editOrderForm.product_price"
+                        oninput="value=value.replace(/[^0-9.]/g,'')"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-divider direction="horizontal" content-position="center"/>
+
+        <el-form-item label="Payment" prop="payment_info">
+          <el-input v-model="editOrderForm.payment_info"></el-input>
+        </el-form-item>
+        <el-form-item label="Shipping" prop="shipping_info">
+          <el-input v-model="editOrderForm.shipping_info"></el-input>
+        </el-form-item>
+
+      </el-form>
+
+      <!--底部区域-->
+      <span slot="footer" class="dialog-footer">
+        <el-button type="danger" @click="deleteOrder" style="margin-right: 80px">
+          Delete</el-button>
+        <el-button @click="editOrderCancel">
+          Cancel</el-button>
+        <el-button type="primary" @click="editOrder">
+          Update</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -386,6 +438,8 @@ export default {
       Orders: [],
       Products: [],
       Categories: [],
+
+      key: 0,
 
       activeName: "first",
 
@@ -432,7 +486,19 @@ export default {
         product_sales: "0",
       },
 
-
+      editOrderDialog: false,
+      editOrderForm: {
+        order_id: "",
+        user_id: "",
+        user_name: "",
+        product_id: "",
+        product_name: "",
+        product_num: "",
+        product_price: "",
+        order_time: "",
+        shipping_info: "Waiting for update",
+        payment_info: "Payed"
+      }
     }
   },
 
@@ -473,8 +539,20 @@ export default {
                         })
                             .then((res) => {
                               console.log(res.data);
-                              let buf = res.data.products;
-                              this.Products.concat(buf);
+                              let buf = res.data.orders;
+                              for(let j=0; j<buf.length; j++){
+                                this.Orders[this.Orders.length] = buf[j];
+                                this.Orders[this.Orders.length -1].user_name = this.Users[i].userName;
+                                this.Orders[this.Orders.length -1].payment_info = "Payed";
+                                this.Orders[this.Orders.length -1].shipping_info = "Waiting for update...";
+                                for(let k=0; k<this.Products.length; k++){
+                                  if(this.Orders[this.Orders.length -1].product_id === this.Products[k].product_id){
+                                    this.Orders[this.Orders.length -1].product_name = this.Products[k].product_name;
+                                    break;
+                                  }
+                                }
+                              }
+                              // console.log(this.Orders)
                             })
         // orders end
                       }
@@ -497,8 +575,41 @@ export default {
                         .then((re) => {
                           console.log(re.data);
                           this.Products = re.data.products;
+                          const c = new Set();
                           for(let i=0; i<this.Products.length; i++){
                             this.Products[i].category_name = this.findCategoryById(this.Products[i].category_id);
+                            c.add(this.Products[i].category_id);
+                          }
+                          let buf = [];
+                          for(let j=0; j<this.Categories.length; j++){
+                            if(c.has(this.Categories[j].category_id)){
+                              buf[buf.length] = this.Categories[j];
+                            }
+                            else{
+                              let f = new FormData()
+                              f.append("category_id", this.Categories[j].category_id)
+            // Delete empty category
+                              this.$axios({
+                                method: "POST",
+                                url: "/api/back-end/category.php?action=deleteCategory",
+                                data: f,
+                              })
+                                  .then((res) => {
+                                    console.log(res.data);
+                                  })
+
+                            }
+                          }
+                          this.Categories = buf;
+                          console.log(this.Categories);
+
+                          for(let i=0; i<this.Orders.length; i++){
+                            for(let j=0; j<this.Products.length; j++){
+                              if(this.Orders[i].product_id === this.Products[j].product_id){
+                                this.Orders[i].product_name = this.Products[j].product_name;
+                                break;
+                              }
+                            }
                           }
                         })
         // products end
@@ -566,11 +677,12 @@ export default {
       for(let i=0; i<this.Users.length; i++){
         if(this.Users[i].user_id === user_id){
           buf = this.Users[i];
+          break;
         }
-
-        this.editUserForm = buf;
-        this.editUserDialog = true;
       }
+
+      this.editUserForm = buf;
+      this.editUserDialog = true;
     },
 
     editUser(){
@@ -735,6 +847,7 @@ export default {
       for(let i=0; i<this.Products.length; i++){
         if(this.Products[i].product_id === product_id){
           buf = this.Products[i];
+          break;
         }
       }
 
@@ -872,7 +985,46 @@ export default {
               location.reload();
             }
           })
-    }
+    },
+
+    editOrderDialogShow(order_id){
+      let buf = {};
+
+      for(let i=0; i<this.Orders.length; i++){
+        if(this.Orders[i].order_id === order_id){
+          buf = this.Orders[i];
+          break;
+        }
+      }
+
+      this.editOrderForm = buf;
+      this.editOrderDialog = true;
+    },
+
+    editOrder(){
+
+    },
+
+    editOrderCancel(){
+      this.editOrderForm = {
+        order_id: "",
+        user_id: "",
+        user_name: "",
+        product_id: "",
+        product_name: "",
+        product_num: "",
+        product_price: "",
+        order_time: "",
+        shipping_info: "Waiting for update",
+        payment_info: "Payed"
+      }
+
+      this.editOrderDialog = false;
+    },
+
+    deleteOrder(){
+
+    },
   }
 }
 </script>
