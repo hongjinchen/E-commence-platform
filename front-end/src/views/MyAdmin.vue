@@ -28,13 +28,14 @@
 
           <el-table :data="Orders" :key="key" border stripe>
             <el-table-column label="ID" prop="order_id" width="120px"></el-table-column>
-            <el-table-column label="Customer" prop="user_name" width="160px"></el-table-column>
-            <el-table-column label="Product" prop="product_name" width="160px"></el-table-column>
-            <el-table-column label="Shipping Info" prop="shipping_info"></el-table-column>
-            <el-table-column label="Price" prop="product_price" width="90px"></el-table-column>
-            <el-table-column label="Count" prop="product_num" width="90px"></el-table-column>
-            <el-table-column label="Payment" prop="payment_info" width="90px"></el-table-column>
-            <el-table-column label="Actions" width="90px">
+            <el-table-column label="Customer" prop="user_name" width="100px"></el-table-column>
+            <el-table-column label="Product" prop="product_name" width="100px"></el-table-column>
+            <el-table-column label="Price" prop="product_price" width="100px"></el-table-column>
+            <el-table-column label="Count" prop="product_num" width="100px"></el-table-column>
+            <el-table-column label="Payment" prop="payment_info" width="100px"></el-table-column>
+            <el-table-column label="Date" prop="order_time_readable" width="160px"></el-table-column>
+            <el-table-column label="Shipping Information" prop="shipping_info"></el-table-column>
+            <el-table-column label="Actions" width="74px">
               <template slot-scope="scope">
                 <!-- 修改按钮 -->
                 <el-button
@@ -111,7 +112,8 @@
                 <el-button
                   type="warning"
                   icon="el-icon-document"
-                  size="mini"></el-button>
+                  size="mini"
+                  @click="userOrderDialogShow(scope.row.user_id)"></el-button>
                 <!-- 修改按钮 -->
                 <el-button
                   type="danger"
@@ -354,6 +356,7 @@
       </span>
     </el-dialog>
 
+<!--editOrder dialog-->
     <el-dialog
       title="Edit Order"
       :visible.sync="editOrderDialog"
@@ -367,13 +370,13 @@
 
         <el-row type="flex">
           <el-col>
-            <el-form-item label="ID" prop="order_id">
+            <el-form-item label="Order ID" prop="order_id">
               <el-input v-model="editOrderForm.order_id" readonly></el-input>
             </el-form-item>
           </el-col>
           <el-col>
-            <el-form-item label="Time" prop="order_time">
-              <el-input v-model="editOrderForm.order_time" readonly></el-input>
+            <el-form-item label="Time" prop="order_time_readable">
+              <el-input v-model="editOrderForm.order_time_readable" readonly></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -423,6 +426,65 @@
         <el-button type="primary" @click="editOrder">
           Update</el-button>
       </span>
+    </el-dialog>
+
+<!--userOrder dialog-->
+    <el-dialog
+      title="Orders of User"
+      :visible.sync="userOrderDialog"
+      width="80%"
+    >
+      <!--主体区域-->
+      <el-form
+        :model="userOrderForm"
+        label-width="100px"
+      >
+        <el-row type="flex">
+          <el-col>
+            <el-form-item label="ID" prop="user_id">
+              <el-input v-model="userOrderForm.user_id" readonly></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="Username" prop="userName">
+              <el-input v-model="userOrderForm.userName" readonly></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+<!--        <el-form-item label="Email" prop="userEmail">-->
+<!--          <el-input v-model="userOrderForm.userEmail" readonly></el-input>-->
+<!--        </el-form-item>-->
+
+        <el-form-item label="Address" prop="user_address">
+          <el-input v-model="userOrderForm.user_address" readonly></el-input>
+        </el-form-item>
+      </el-form>
+
+      <el-divider direction="horizontal" content-position="center"/>
+
+      <div style="font-size: 20px; margin-bottom: 16px">Orders</div>
+
+      <el-table :data="this.userOrderForm.orders" :key="key" border stripe>
+        <el-table-column label="ID" prop="order_id" width="120px"></el-table-column>
+        <el-table-column label="Customer" prop="user_name" width="100px"></el-table-column>
+        <el-table-column label="Product" prop="product_name" width="100px"></el-table-column>
+        <el-table-column label="Price" prop="product_price" width="100px"></el-table-column>
+        <el-table-column label="Count" prop="product_num" width="100px"></el-table-column>
+        <el-table-column label="Payment" prop="payment_info" width="100px"></el-table-column>
+        <el-table-column label="Date" prop="order_time_readable" width="160px"></el-table-column>
+        <el-table-column label="Shipping Information" prop="shipping_info"></el-table-column>
+      </el-table>
+
+      <!--底部区域-->
+<!--      <span slot="footer" class="dialog-footer">-->
+<!--        <el-button type="danger" @click="deleteOrder" style="margin-right: 80px">-->
+<!--          Delete</el-button>-->
+<!--        <el-button @click="editOrderCancel">-->
+<!--          Cancel</el-button>-->
+<!--        <el-button type="primary" @click="editOrder">-->
+<!--          Update</el-button>-->
+<!--      </span>-->
     </el-dialog>
 
   </div>
@@ -496,8 +558,18 @@ export default {
         product_num: "",
         product_price: "",
         order_time: "",
+        order_time_readable :"",
         shipping_info: "Waiting for update",
         payment_info: "Payed"
+      },
+
+      userOrderDialog: false,
+      userOrderForm: {
+        user_id: "",
+        userName: "",
+        userEmail: "",
+        user_address: "",
+        orders: [],
       }
     }
   },
@@ -514,7 +586,7 @@ export default {
         url: "/api/back-end/user.php?action=adminLoginChecker"
       })
           .then((r) => {
-            console.log(r.data);
+            console.log("Admin login status: ", r.data);
             if(r.data.error === true){
               this.notifyError("please login with an admin account");
             }
@@ -525,36 +597,12 @@ export default {
                 url: "/api/back-end/userAdmin.php?action=getAllUsers",
               })
                   .then((re) => {
-                    console.log(re.data);
                     if(re.data.error === false){
                       this.Users = re.data.users;
-                      for(let i=0; i<this.Users.length; i++){
-                        let fd= new FormData();
-                        fd.append("user_id", this.Users[i].user_id)
-        // Get all orders
-                        this.$axios({
-                          method: "POST",
-                          url: "/api/back-end/order.php?action=getUserOrders",
-                          data: fd
-                        })
-                            .then((res) => {
-                              console.log(res.data);
-                              let buf = res.data.orders;
-                              for(let j=0; j<buf.length; j++){
-                                this.Orders[this.Orders.length] = buf[j];
-                                this.Orders[this.Orders.length -1].user_name = this.Users[i].userName;
-                                this.Orders[this.Orders.length -1].payment_info = "Payed";
-                                this.Orders[this.Orders.length -1].shipping_info = "Waiting for update...";
-                                for(let k=0; k<this.Products.length; k++){
-                                  if(this.Orders[this.Orders.length -1].product_id === this.Products[k].product_id){
-                                    this.Orders[this.Orders.length -1].product_name = this.Products[k].product_name;
-                                    break;
-                                  }
-                                }
-                              }
-                              // console.log(this.Orders)
-                            })
-        // orders end
+                      console.log("Users: ", this.Users);
+
+                      for(let i=0; i<this.Orders.length; i++){
+                        this.Orders[i].user_name = this.findUserById(this.Orders[i].user_id);
                       }
                     }
                   })
@@ -565,7 +613,6 @@ export default {
                 url: "/api/back-end/category.php?action=getCategories"
               })
                   .then((re) => {
-                    console.log(re.data);
                     this.Categories = re.data.categories;
         // Get all products
                     this.$axios({
@@ -573,8 +620,9 @@ export default {
                       url: "/api/back-end/product.php?action=getAllProducts"
                     })
                         .then((re) => {
-                          console.log(re.data);
                           this.Products = re.data.products;
+                          console.log("Products: ", this.Products)
+            // find empty category
                           const c = new Set();
                           for(let i=0; i<this.Products.length; i++){
                             this.Products[i].category_name = this.findCategoryById(this.Products[i].category_id);
@@ -601,20 +649,37 @@ export default {
                             }
                           }
                           this.Categories = buf;
-                          console.log(this.Categories);
+                          console.log("Categories: ", this.Categories);
 
                           for(let i=0; i<this.Orders.length; i++){
-                            for(let j=0; j<this.Products.length; j++){
-                              if(this.Orders[i].product_id === this.Products[j].product_id){
-                                this.Orders[i].product_name = this.Products[j].product_name;
-                                break;
-                              }
-                            }
+                            this.Orders[i].product_name = this.findProductById(this.Orders[i].product_id);
                           }
                         })
         // products end
                   })
     // categories end
+    // Get all orders
+              this.$axios({
+                method: "POST",
+                url: "/api/back-end/order.php?action=getAllOrders"
+              })
+                  .then((re) =>{
+                    this.Orders = re.data.orders;
+                    for(let i=0; i<this.Orders.length; i++){
+                      this.Orders[i].order_time_readable = this.timetrans(this.Orders[i].order_time);
+                      if(this.Orders[i].payment_info === ""){
+                        this.Orders[i].payment_info = "Payed";
+                      }
+                      if(this.Orders[i].shipping_info === ""){
+                        this.Orders[i].shipping_info = "Waiting for update";
+                      }
+                      this.Orders[i].product_name = this.findProductById(this.Orders[i].product_id);
+                      this.Orders[i].user_name = this.findUserById(this.Orders[i].user_id);
+                    }
+
+                    console.log("Orders: ", this.Orders);
+                  })
+    // Orders end
             }
           })
 //state end
@@ -638,6 +703,26 @@ export default {
       return "None";
     },
 
+    findUserById(id){
+      for(let i=0; i<this.Users.length; i++){
+        if(this.Users[i].user_id === id){
+          return this.Users[i].userName;
+        }
+      }
+
+      return "None";
+    },
+
+    findProductById(id){
+      for(let i=0; i<this.Products.length; i++){
+        if(this.Products[i].product_id === id){
+          return this.Products[i].product_name;
+        }
+      }
+
+      return "None";
+    },
+
     addUser(){
       let fd = new FormData();
       fd.append("username", this.addUserForm.username);
@@ -650,7 +735,7 @@ export default {
         data: fd,
       })
           .then((r) => {
-            console.log(r.data);
+            console.log("addUser: ", r.data);
             if(r.data.error === true){
               this.notifyError("Add user failed");
             }
@@ -676,7 +761,13 @@ export default {
 
       for(let i=0; i<this.Users.length; i++){
         if(this.Users[i].user_id === user_id){
-          buf = this.Users[i];
+          buf = {
+            user_id: this.Users[i].user_id,
+            userName: this.Users[i].userName,
+            password: this.Users[i].password,
+            userEmail: this.Users[i].userEmail,
+            user_address: this.Users[i].user_address,
+          }
           break;
         }
       }
@@ -699,7 +790,7 @@ export default {
         data: fd,
       })
           .then((r) => {
-            console.log(r.data);
+            console.log("editUser: ", r.data);
             if(r.data.error === true){
               this.notifyError("Update user failed");
             }
@@ -732,7 +823,7 @@ export default {
         data: fd,
       })
           .then((r) => {
-            console.log(r.data);
+            console.log("deleteUser: ", r.data);
             if(r.data.error === true){
               this.notifyError("Delete user failed");
             }
@@ -769,7 +860,7 @@ export default {
           data: f
         })
             .then((r) => {
-              console.log(r.data);
+              console.log("addCategory: ", r.data);
               if(r.data.error){
                 this.notifyError("Add category failed");
                 return;
@@ -781,7 +872,7 @@ export default {
                 url: "/api/back-end/category.php?action=getCategories",
               })
                   .then((re) => {
-                    console.log(re.data);
+                    console.log("reloadCategories: ", re.data);
                     this.Categories = re.data.categories;
                     category_id = this.findCategoryByName(this.addProductForm.category_name)
                     fd.append("category_id", category_id);
@@ -793,7 +884,7 @@ export default {
                       data: fd,
                     })
                         .then((res) => {
-                          console.log(res.data);
+                          console.log("addProduct: ", res.data);
                           if(res.data.error){
                             this.notifyError("Add product failed");
                             return;
@@ -815,7 +906,7 @@ export default {
         data: fd,
       })
           .then((r) => {
-            console.log(r.data);
+            console.log("addProduct: ", r.data);
             if(r.data.error){
               this.notifyError("Add product failed");
               return;
@@ -846,7 +937,19 @@ export default {
 
       for(let i=0; i<this.Products.length; i++){
         if(this.Products[i].product_id === product_id){
-          buf = this.Products[i];
+          buf = {
+            product_id: this.Products[i].product_id,
+            product_name: this.Products[i].product_name,
+            category_id: this.Products[i].category_id,
+            category_name: this.Products[i].category_name,
+            product_title: this.Products[i].product_title,
+            product_intro: this.Products[i].product_intro,
+            product_picture: this.Products[i].product_picture,
+            product_price: this.Products[i].product_price,
+            product_selling_price: this.Products[i].product_selling_price,
+            product_num: this.Products[i].product_num,
+            product_sales: this.Products[i].product_sales,
+          };
           break;
         }
       }
@@ -882,7 +985,7 @@ export default {
           data: f
         })
             .then((r) => {
-              console.log(r.data);
+              console.log("addCategory: ", r.data);
               if(r.data.error){
                 this.notifyError("Add category failed");
                 return;
@@ -894,7 +997,7 @@ export default {
                 url: "/api/back-end/category.php?action=getCategories",
               })
                   .then((re) => {
-                    console.log(re.data);
+                    console.log("reloadCategories: ", re.data);
                     this.Categories = re.data.categories;
                     category_id = this.findCategoryByName(this.addProductForm.category_name)
                     fd.append("category_id", category_id);
@@ -906,7 +1009,7 @@ export default {
                       data: fd,
                     })
                         .then((res) => {
-                          console.log(res.data);
+                          console.log("editProduct: ", res.data);
                           if(res.data.error){
                             this.notifyError("Edit product failed");
                             return;
@@ -928,7 +1031,7 @@ export default {
         data: fd,
       })
           .then((r) => {
-            console.log(r.data);
+            console.log("editProduct: ", r.data);
             if(r.data.error){
               this.notifyError("Edit product failed");
               return;
@@ -948,8 +1051,6 @@ export default {
     },
 
     editProductCancel(){
-      console.log(this.editProductForm.product_picture);
-
       this.editProductForm = {
         product_id: "",
         product_name: "",
@@ -976,7 +1077,7 @@ export default {
         data: fd,
       })
           .then((r) => {
-            console.log(r.data);
+            console.log("deleteProduct: ", r.data);
             if(r.data.error === true){
               this.notifyError("Delete product failed");
             }
@@ -992,7 +1093,19 @@ export default {
 
       for(let i=0; i<this.Orders.length; i++){
         if(this.Orders[i].order_id === order_id){
-          buf = this.Orders[i];
+          buf = {
+            order_id: this.Orders[i].order_id,
+            user_id: this.Orders[i].user_id,
+            user_name: this.Orders[i].user_name,
+            product_id: this.Orders[i].product_id,
+            product_name: this.Orders[i].product_name,
+            product_num: this.Orders[i].product_num,
+            product_price: this.Orders[i].product_price,
+            order_time: this.Orders[i].order_time,
+            order_time_readable: this.Orders[i].order_time_readable,
+            shipping_info: this.Orders[i].shipping_info,
+            payment_info: this.Orders[i].payment_info
+          }
           break;
         }
       }
@@ -1002,7 +1115,28 @@ export default {
     },
 
     editOrder(){
+      let fd = new FormData();
+      fd.append("order_id", this.editOrderForm.order_id);
+      fd.append("product_num", this.editOrderForm.product_num);
+      fd.append("product_price", this.editOrderForm.product_price);
+      fd.append("shipping_info", this.editOrderForm.shipping_info);
+      fd.append("payment_info", this.editOrderForm.payment_info);
 
+      this.$axios({
+        method: "POST",
+        url: "/api/back-end/order.php?action=editOrder",
+        data: fd,
+      })
+          .then((r) =>{
+            console.log("editOrder: ", r.data);
+            if(r.data.error === true){
+              this.notifyError("Update order failed");
+            }
+            else{
+              this.notifySucceed("Succeed!");
+              location.reload();
+            }
+          })
     },
 
     editOrderCancel(){
@@ -1015,6 +1149,7 @@ export default {
         product_num: "",
         product_price: "",
         order_time: "",
+        order_time_readable :"",
         shipping_info: "Waiting for update",
         payment_info: "Payed"
       }
@@ -1023,8 +1158,61 @@ export default {
     },
 
     deleteOrder(){
+      let fd = new FormData();
+      fd.append("order_id", this.editOrderForm.order_id);
 
+      this.$axios({
+        method: "POST",
+        url: "/api/back-end/order.php?action=deleteOrder",
+        data: fd,
+      })
+          .then((r) =>{
+            console.log("deleteOrder: ", r.data);
+            if(r.data.error === true){
+              this.notifyError("Delete order failed");
+            }
+            else{
+              this.notifySucceed("Succeed!");
+              location.reload();
+            }
+          })
     },
+
+    timetrans(order_time){
+      let date = new Date(order_time *1000);//如果date为13位不需要乘1000
+      let Y = date.getFullYear() + '-';
+      let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+      let D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+      let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+      let m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+      let s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
+      return Y+M+D+h+m+s;
+    },
+
+    userOrderDialogShow(user_id){
+      let buf = {};
+      for(let i=0; i<this.Users.length; i++){
+        if(this.Users[i].user_id === user_id){
+          buf = {
+            user_id: user_id,
+            userName: this.Users[i].userName,
+            userEmail: this.Users[i].userEmail,
+            user_address: this.Users[i].user_address,
+            orders: []
+          }
+          break;
+        }
+      }
+
+      for(let i=0; i<this.Orders.length; i++){
+        if(this.Orders[i].user_id === user_id){
+          buf.orders[buf.orders.length] = this.Orders[i]
+        }
+      }
+
+      this.userOrderForm = buf;
+      this.userOrderDialog = true;
+    }
   }
 }
 </script>
