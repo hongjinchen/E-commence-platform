@@ -43,14 +43,6 @@ const routes = [
     component: () => import('../views/Details.vue')
   },
   {
-    path: '/shoppingCart',
-    name: 'ShoppingCart',
-    component: () => import('../views/ShoppingCart.vue'),
-    meta: {
-      requireAuth: true // 需要验证登录状态
-    }
-  },
-  {
     path: '/ShoppingCartPage',
     name: 'ShoppingCartPage',
     component: () => import('../views/ShoppingCartPage.vue'),

@@ -128,6 +128,8 @@ export default {
             // 登录信息存到本地
             this.$store.state.userName = this.LoginUser.name;
             this.$store.state.userEmail = res.data.login_user.userEmail;
+            console.log("userEmail"+res.data.login_user.userEmail)
+            console.log(res.data.login_user)
             this.$store.state.user_id = res.data.login_user.user_id;
             // 改变登陆状态
             this.$store.state.islogin = true;

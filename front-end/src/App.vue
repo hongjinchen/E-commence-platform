@@ -93,7 +93,7 @@
         >
           <div>
             <div>User name: {{ this.$store.state.userName }}</div>
-            <div>User email: {{ this.$store.state.userEmail }}</div>
+            <div style="margin-bottom:20px">User email: {{ this.$store.state.userEmail }}</div>
             <el-card class="box-card">
               <div slot="header" class="clearfix">
                 <span>User address</span>
@@ -113,9 +113,9 @@
                   <el-row>
                     <el-col :span="20"
                       ><div class="grid-content bg-purple">
-                        <div>Receiver:{{ item.receiver }}</div>
-                        <div>Phone Number:{{ item.phoneNumber }}</div>
-                        <div>Address:{{ item.address }}</div>
+                        <div>Receiver:  {{ item.receiver }}</div>
+                        <div>Phone Number:  {{ item.phoneNumber }}</div>
+                        <div>Address:  {{ item.address }}</div>
                       </div></el-col
                     >
                     <el-col :span="4"
@@ -129,6 +129,9 @@
                     ></el-col>
                   </el-row>
                 </el-card>
+              </div>
+              <div v-if="user.order.length<1">
+                There is still no address here,please add it soon
               </div>
             </el-card>
             <el-dialog
@@ -195,19 +198,6 @@
           <el-menu-item style="font-size:18px" index="/about"
             >About Us</el-menu-item
           >
-
-          <div class="so">
-            <el-input
-              placeholder="Please enter your search content.."
-              v-model="search"
-            >
-              <el-button
-                slot="append"
-                icon="el-icon-search"
-                @click="searchClick"
-              ></el-button>
-            </el-input>
-          </div>
         </el-menu>
       </el-header>
       <!-- 顶栏容器END -->
@@ -722,4 +712,5 @@ a:hover {
 }
 
 /* 底栏容器CSS END */
+
 </style>

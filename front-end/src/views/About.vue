@@ -10,15 +10,24 @@
       </div>
     </div>
     <div class="about-content">
-      <div>救命啊！！！</div>
+      <div>
+        The project completed by our group is an online flower selling platform.
+        The platform interface is completed from the perspective of
+        administrator and user respectively. The main way of platform works is
+        as follows: only one administrator, who is the merchant, can sell goods.
+        Meanwhile, unlimited number of customers can log in by registering their
+        accounts on the platform and then purchase goods and complete
+        transactions.
+      </div>
+      <div>
+        There are two kinds of accounts in our online flower shop, one is customer account and the other is administrator account. 
+      </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  components: {
-    
-  },
+  components: {},
 };
 </script>
 <style scoped>
@@ -47,8 +56,13 @@ export default {
   overflow: hidden;
 }
 .about .about-content {
+  padding:40px;
   width: 1225px;
   margin: 0 auto;
   background-color: #fff;
+  font-size: 22px;
+  font-weight: 200;
+  line-height: 58px;
+  color: #333;
 }
 </style>

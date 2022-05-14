@@ -67,7 +67,9 @@
             >Add to cart</el-button
           >
           <el-button class="shop-cart" @click="addCollect">Wishlist</el-button>
-          <el-button class="shop-cart" @click="purchaseGoods">Purchase</el-button>
+          <el-button class="shop-cart" @click="purchaseGoods"
+            >Purchase</el-button
+          >
         </div>
         <!-- 内容区底部按钮END -->
         <div class="pro-policy">
@@ -117,7 +119,7 @@ export default {
     ]),
     // 获取商品详细信息'
     purchaseGoods(val) {
-            this.$axios({
+      this.$axios({
         method: "post",
         url: "/api/back-end/product.php?action=getProductById",
         data: {
@@ -385,7 +387,7 @@ export default {
 }
 #details .main .content .button .shop-cart {
   width: 150px;
-  margin-left:30px;
+  margin-left: 30px;
   margin-right: 30px;
   background-color: #ec9d8f;
 }

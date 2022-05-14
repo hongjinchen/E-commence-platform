@@ -1,206 +1,134 @@
-<!--
- * @Description: 确认订单页面组件
- * @Author: hai-27
- * @Date: 2020-02-23 23:46:39
- * @LastEditors: hai-27
- * @LastEditTime: 2020-03-29 13:10:21
- -->
 <template>
-  <div class="confirmOrder">
-    <!-- 头部 -->
-    <div class="confirmOrder-header">
-      <div class="header-content">
-        <p>
-          <i class="el-icon-s-order"></i>
-        </p>
-        <p>确认订单</p>
-        <router-link to></router-link>
-      </div>
+  <div>
+    <div>
+      <el-button @click="centerDialogVisible = true">
+        Purchase
+      </el-button>
     </div>
-    <!-- 头部END -->
-
-    <!-- 主要内容容器 -->
-    <div class="content">
-      <!-- 选择地址 -->
-      <div class="section-address">
-        <p class="title">收货地址</p>
-        <div class="address-body">
-          <ul>
-            <li
-              :class="item.id == confirmAddress ? 'in-section' : ''"
-              v-for="item in address"
-              :key="item.id"
-            >
-              <h2>{{item.name}}</h2>
-              <p class="phone">{{item.phone}}</p>
-              <p class="address">{{item.address}}</p>
-            </li>
-            <li class="add-address">
-              <i class="el-icon-circle-plus-outline"></i>
-              <p>添加新地址</p>
-            </li>
-          </ul>
+    <!-- 下订单页面 -->
+    <el-dialog :visible.sync="centerDialogVisible" width="80%" center>
+      <div class="confirmOrder">
+        <!-- 头部 -->
+        <div class="confirmOrder-header">
+          <div class="header-content">
+            <p>
+              <i class="el-icon-s-order"></i>
+            </p>
+            <p>Confirm an order</p>
+            <router-link to></router-link>
+          </div>
         </div>
-      </div>
-      <!-- 选择地址END -->
+        <!-- 头部END -->
 
-      <!-- 商品及优惠券 -->
-      <div class="section-goods">
-        <p class="title">商品及优惠券</p>
-        <div class="goods-list">
-          <ul>
-            <li v-for="item in getCheckGoods" :key="item.id">
-              <img :src="$target + item.productImg" />
-              <span class="pro-name">{{item.productName}}</span>
-              <span class="pro-price">{{item.price}}元 x {{item.num}}</span>
-              <span class="pro-status"></span>
-              <span class="pro-total">{{item.price * item.num}}元</span>
-            </li>
-          </ul>
+        <!-- 主要内容容器 -->
+        <div class="content">
+          <!-- 选择地址 -->
+          <div class="section-address">
+            <p class="title">shipping address</p>
+            <div class="address-body">
+              <ul>
+                <li
+                  :class="item.id == confirmAddress ? 'in-section' : ''"
+                  v-for="item in address"
+                  :key="item.id"
+                >
+                  <h2>{{ item.name }}</h2>
+                  <p class="phone">{{ item.phone }}</p>
+                  <p class="address">{{ item.address }}</p>
+                </li>
+                <li class="add-address">
+                  <i class="el-icon-circle-plus-outline"></i>
+                  <p>添加新地址</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- 选择地址END -->
+
+          <!-- 商品及优惠券 -->
+          <div class="section-goods">
+            <p class="title">Goods</p>
+            <div class="goods-list">
+              <ul>
+                <li v-for="item in getCheckGoods" :key="item.id">
+                  <img :src="$target + item.productImg" />
+                  <span class="pro-name">{{ item.productName }}</span>
+                  <span class="pro-price"
+                    >{{ item.price }}元 x {{ item.num }}</span
+                  >
+                  <span class="pro-status"></span>
+                  <span class="pro-total">{{ item.price * item.num }}元</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- 商品END -->
+
+          <!-- 结算列表 -->
+          <div class="section-count">
+            <div class="money-box">
+              <ul>
+                <li>
+                  <span class="title">商品件数：</span>
+                  <span class="value">{{ getCheckNum }}件</span>
+                </li>
+                <li>
+                  <span class="title">商品总价：</span>
+                  <span class="value">{{ getTotalPrice }}RMB</span>
+                </li>
+                <li>
+                  <span class="title">Freight charge: </span>
+                  <span class="value">0RMB</span>
+                </li>
+                <li class="total">
+                  <span class="title">Amount:</span>
+                  <span class="value">
+                    <span class="total-price">{{ getTotalPrice }}</span
+                    >RMB
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- 结算列表END -->
+
+          <!-- 结算导航 -->
+          <div class="section-bar">
+            <div class="btn">
+              <router-link to="/shoppingCart" class="btn-base btn-return"
+                >返回购物车</router-link
+              >
+              <a
+                href="javascript:void(0);"
+                @click="addOrder"
+                class="btn-base btn-primary"
+                >结算</a
+              >
+            </div>
+          </div>
+          <!-- 结算导航END -->
         </div>
+        <!-- 主要内容容器END -->
       </div>
-      <!-- 商品及优惠券END -->
-
-      <!-- 配送方式 -->
-      <div class="section-shipment">
-        <p class="title">配送方式</p>
-        <p class="shipment">包邮</p>
-      </div>
-      <!-- 配送方式END -->
-
-      <!-- 发票 -->
-      <div class="section-invoice">
-        <p class="title">发票</p>
-        <p class="invoice">电子发票</p>
-        <p class="invoice">个人</p>
-        <p class="invoice">商品明细</p>
-      </div>
-      <!-- 发票END -->
-
-      <!-- 结算列表 -->
-      <div class="section-count">
-        <div class="money-box">
-          <ul>
-            <li>
-              <span class="title">商品件数：</span>
-              <span class="value">{{getCheckNum}}件</span>
-            </li>
-            <li>
-              <span class="title">商品总价：</span>
-              <span class="value">{{getTotalPrice}}元</span>
-            </li>
-            <li>
-              <span class="title">活动优惠：</span>
-              <span class="value">-0元</span>
-            </li>
-            <li>
-              <span class="title">优惠券抵扣：</span>
-              <span class="value">-0元</span>
-            </li>
-            <li>
-              <span class="title">运费：</span>
-              <span class="value">0元</span>
-            </li>
-            <li class="total">
-              <span class="title">应付总额：</span>
-              <span class="value">
-                <span class="total-price">{{getTotalPrice}}</span>元
-              </span>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- 结算列表END -->
-
-      <!-- 结算导航 -->
-      <div class="section-bar">
-        <div class="btn">
-          <router-link to="/shoppingCart" class="btn-base btn-return">返回购物车</router-link>
-          <a href="javascript:void(0);" @click="addOrder" class="btn-base btn-primary">结算</a>
-        </div>
-      </div>
-      <!-- 结算导航END -->
-    </div>
-    <!-- 主要内容容器END -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">Cancel</el-button>
+        <el-button
+          type="primary"
+          @click="
+            (centerDialogVisible = false),
+              purchaseGood(item.productID, item.num, item.price)
+          "
+          >Comfirm</el-button
+        >
+      </span>
+    </el-dialog>
+    <!-- 下订单页面END -->
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
-import { mapActions } from "vuex";
-export default {
-  name: "",
-  data() {
-    return {
-      // 虚拟数据
-      confirmAddress: 1, // 选择的地址id
-      // 地址列表
-      address: [
-        {
-          id: 1,
-          name: "陈同学",
-          phone: "100861001010000",
-          address: "广东 广州市 白云区 ***"
-        },
-        {
-          id: 2,
-          name: "陈同学",
-          phone: "100861001010000",
-          address: "广东 广州市 白云区 ***"
-        }
-      ]
-    };
-  },
-  created() {
-    // 如果没有勾选购物车商品直接进入确认订单页面,提示信息并返回购物车
-    if (this.getCheckNum < 1) {
-      this.notifyError("请勾选商品后再结算");
-      this.$router.push({ path: "/shoppingCart" });
-    }
-  },
-  computed: {
-    // 结算的商品数量; 结算商品总计; 结算商品信息
-    ...mapGetters(["getCheckNum", "getTotalPrice", "getCheckGoods"])
-  },
-  methods: {
-    ...mapActions(["deleteShoppingCart"]),
-    addOrder() {
-      this.$axios
-        .post("/api/user/order/addOrder", {
-          user_id: this.$store.state.user_id,
-          products: this.getCheckGoods
-        })
-        .then(res => {
-          let products = this.getCheckGoods;
-          switch (res.data.code) {
-            // “001”代表结算成功
-            case "001":
-              for (let i = 0; i < products.length; i++) {
-                const temp = products[i];
-                // 删除已经结算的购物车商品
-                this.deleteShoppingCart(temp.id);
-              }
-              // 提示结算结果
-              this.notifySucceed(res.data.msg);
-              // 跳转我的订单页面
-              this.$router.push({ path: "/order" });
-              break;
-            default:
-              // 提示失败信息
-              this.notifyError(res.data.msg);
-          }
-        })
-        .catch(err => {
-          return Promise.reject(err);
-        });
-    }
-  }
-};
+export default {};
 </script>
 <style scoped>
-.confirmOrder {
-  background-color: #f5f5f5;
-  padding-bottom: 20px;
-}
 /* 头部CSS */
 .confirmOrder .confirmOrder-header {
   background-color: #fff;
@@ -450,5 +378,4 @@ export default {
 }
 /* 结算导航CSS */
 
-/* 主要内容容器CSS END */
-</style>
+/* 主要内容容器CSS END */</style>

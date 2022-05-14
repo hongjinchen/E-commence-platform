@@ -28,9 +28,7 @@
           <!-- 我的订单表头 -->
           <li class="order-info">
             <div class="order-id">Order No:{{ item.order_id }}</div>
-            <div class="order-time">
-              Order Time:{{ item.order_time | dateFormat }}
-            </div>
+            <div class="order-time">Order Time: {{ item.order_time }}</div>
           </li>
           <li class="header">
             <div class="pro-img"></div>
@@ -42,7 +40,7 @@
           <!-- 我的订单表头END -->
 
           <!-- 订单列表 -->
-          <el-card>
+          <el-card style="  box-shadow: none">
             <div class="pro-img">
               <router-link
                 :to="{
@@ -90,6 +88,7 @@
   </div>
 </template>
 <script>
+
 export default {
   data() {
     return {
@@ -98,6 +97,7 @@ export default {
       product: [],
     };
   },
+
   activated() {
     // 获取订单数据
 
@@ -159,10 +159,12 @@ export default {
           console.log(res.data.product_info);
           let product = res.data.product_info;
           console.log("productInfo", product);
+          let order_time = this.timetrans(this.orders[i].order_time);
+          console.log(order_time);
           let newitem = {
             id: this.orders[i].id,
             order_id: this.orders[i].order_id,
-            order_time: this.orders[i].order_time,
+            order_time: order_time,
             payment_info: this.orders[i].payment_info,
             product_id: this.orders[i].product_id,
             product_num: this.orders[i].product_num,
@@ -180,7 +182,26 @@ export default {
     console.log("success");
     console.log(this.ordersDetail);
   },
-  methods: {},
+  methods: {
+    timetrans(date) {
+      date = new Date(date * 1000); //如果date为13位不需要乘1000
+      var Y = date.getFullYear() + "-";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "-";
+      var D =
+        (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) + " ";
+      var h =
+        (date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) + ":";
+      var m =
+        (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()) +
+        ":";
+      var s =
+        date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+      return Y + M + D + h + m + s;
+    },
+  },
   watch: {
     // 通过订单信息，计算出每个订单的商品数量及总价
     orders: function(val) {

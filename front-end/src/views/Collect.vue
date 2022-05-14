@@ -16,15 +16,28 @@
           <div id="myList" class="myList">
             <ul>
               <li v-for="item in collectListDetail" :key="item.product_id">
+                                  <el-popover placement="right">
+                    <p>Are you sure?</p>
+                    <div style="text-align: right; margin: 10px 0 0">
+                      <el-button
+                        type="primary"
+                        size="mini"
+                        @click="deleteCollect(item.product_id)"
+                        >Continue</el-button
+                      >
+                    </div>
+                    <i
+                      class="el-icon-error"
+                      slot="reference"
+                      style="font-size: 30px;"
+                    ></i>
+                  </el-popover>
                 <router-link
                   :to="{
                     path: '/goods/details',
                     query: { productID: item.product_id },
                   }"
                 >
-                  <el-button size="mini" @click="deleteCollect(item.product_id)"
-                    >Delete</el-button
-                  >
                   <img :src="item.product_picture" alt />
                   <h2>{{ item.product_name }}</h2>
                   <h3>{{ item.product_title }}</h3>

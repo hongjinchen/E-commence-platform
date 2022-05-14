@@ -232,7 +232,6 @@ export default {
     getAllProducts() {
       this.$axios({
         method: "post",
-        // url: "http://localhost:80/back-end/product.php?action=getAllProducts",
          url: "/api/back-end/product.php?action=getAllProducts",
       })
         .then((res) => {
@@ -252,7 +251,6 @@ export default {
     },
     goToDetail(index) {
       // 前往详情页
-      alert(index);
       this.$router.push({
         path: "/goods/details",
         query: { productID: index },
@@ -278,6 +276,7 @@ export default {
   font-size: 20px;
 }
 .context {
+  box-shadow: none;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
