@@ -430,7 +430,7 @@
 
 <!--userOrder dialog-->
     <el-dialog
-      title="Edit Order"
+      title="Orders of User"
       :visible.sync="userOrderDialog"
       width="80%"
     >
